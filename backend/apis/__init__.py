@@ -11,6 +11,15 @@ import apis.auth
 import apis.course
 import apis.user
 import apis.enrollment
+import apis.instructor
+import apis.student
+import apis.week
+import apis.lecture
+import apis.assignment
+import apis.question
+import apis.option
+import apis.event
+import apis.chat
 
 @api.route('/debug/db_populate')
 class DebugDBPopulateAPI(Resource):

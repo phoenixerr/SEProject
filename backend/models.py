@@ -126,15 +126,6 @@ class Chat(db.Model):
   course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=True)
   course = db.relationship('Course', backref=db.backref('chats', lazy=True))
 
-class Planner(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
-  title = db.Column(db.String(80), nullable=False)
-
-  user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-  user = db.relationship('User', backref=db.backref('planners', lazy=True))
-
-  course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=True)
-  course = db.relationship('Course', backref=db.backref('planners', lazy=True))
 
 class Event(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -142,8 +133,11 @@ class Event(db.Model):
   start = db.Column(db.DateTime, nullable=False)
   end = db.Column(db.DateTime, nullable=False)
 
-  planner_id = db.Column(db.Integer, db.ForeignKey('planner.id'), nullable=False)
-  planner = db.relationship('Planner', backref=db.backref('events', lazy=True))
+  course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=True)
+  course = db.relationship('Course', backref=db.backref('planners', lazy=True))
+
+  user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+  user = db.relationship('User', backref=db.backref('planners', lazy=True))
 
 with app.app_context():
   db.create_all()

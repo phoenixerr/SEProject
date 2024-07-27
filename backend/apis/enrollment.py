@@ -58,7 +58,7 @@ class StudentEnrollmentAPI(Resource):
             'user_id': user_id,
             'course_id': course_id,
         }
-        return marshal(response, enrollment_fields)
+        return marshal(response, enrollment_fields), 200
     @jwt_required()
     def delete(self, user_id, course_id):
         self_id = get_jwt_identity()
