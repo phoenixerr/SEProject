@@ -34,18 +34,16 @@ class User(db.Model):
     return check_password_hash(self.passhash, password)
 
 class Student(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
-  cpga = db.Column(db.Float, nullable=False)
-
-  user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+  id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, primary_key=True)
   user = db.relationship('User', backref=db.backref('student', lazy=True))
+
+  cgpa = db.Column(db.Float, nullable=False)
+
 
   courses = db.relationship('Course', secondary=student_course, backref=db.backref('students', lazy=True))
 
 class Instructor(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
-
-  user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+  id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, primary_key=True)
   user = db.relationship('User', backref=db.backref('instructor', lazy=True))
 
   courses = db.relationship('Course', secondary=instructor_course, backref=db.backref('instructors', lazy=True))
