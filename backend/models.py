@@ -58,30 +58,27 @@ class Course(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(80), nullable=False)
   level = db.Column(db.Integer, nullable=False, default=1)
+  summary = db.Column(db.String(80), nullable=True)
 
-  summary_id = db.Column(db.Integer, db.ForeignKey('summary.id'), nullable=True)
-  summary = db.relationship('Summary', backref=db.backref('course', lazy=True))
 
 class Week(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   number = db.Column(db.Integer, nullable=False)
+  summary = db.Column(db.String(80), nullable=True)
 
   course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
   course = db.relationship('Course', backref=db.backref('weeks', lazy=True))
 
-  summary_id = db.Column(db.Integer, db.ForeignKey('summary.id'), nullable=True)
-  summary = db.relationship('Summary', backref=db.backref('week', lazy=True))
 
 class Lecture(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String(80), nullable=False)
   url = db.Column(db.String(80), nullable=False)
+  summary = db.Column(db.String(80), nullable=True)
 
   week_id = db.Column(db.Integer, db.ForeignKey('week.id'), nullable=False)
   week = db.relationship('Week', backref=db.backref('lectures', lazy=True))
 
-  summary_id = db.Column(db.Integer, db.ForeignKey('summary.id'), nullable=True)
-  summary = db.relationship('Summary', backref=db.backref('lecture', lazy=True))
 
 class Assignment(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -116,11 +113,6 @@ class Submission(db.Model):
 
   option_id = db.Column(db.Integer, db.ForeignKey('option.id'), nullable=False)
   option = db.relationship('Option', backref=db.backref('submissions', lazy=True))
-
-class Summary(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
-  content = db.Column(db.String(80), nullable=False)
-  datetime = db.Column(db.DateTime, nullable=False)
 
 class Chat(db.Model):
   id = db.Column(db.Integer, primary_key=True)
