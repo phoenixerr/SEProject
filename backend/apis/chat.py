@@ -36,6 +36,7 @@ class CourseChatAPI(Resource):
         return marshal(chats, chat_fields)
 
     @jwt_required()
+    @api.expect(chat_parser)
     def post(self, course_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -92,6 +93,7 @@ class ChatAPI(Resource):
         return marshal(chats, chat_fields)
 
     @jwt_required()
+    @api.expect(chat_parser)
     def post(self):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)

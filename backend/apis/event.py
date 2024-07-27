@@ -38,6 +38,7 @@ class CourseEventAPI(Resource):
         return marshal(events, event_fields)
 
     @jwt_required()
+    @api.expect(event_parser)
     def post(self, course_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -74,6 +75,7 @@ class EventAPI(Resource):
         return marshal(event, event_fields)
 
     @jwt_required()
+    @api.expect(event_parser)
     def put(self, event_id):
         event = Event.query.get(event_id)
         if not event:

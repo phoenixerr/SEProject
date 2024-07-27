@@ -4,8 +4,13 @@ from main import app
 from models import db, Course, User, Student, Instructor, Admin
 from apis import api
 
+auth_parser = reqparse.RequestParser()
+auth_parser.add_argument('username', type=str, required=True, help='Username')
+auth_parser.add_argument('password', type=str, required=True, help='Password')
+
 @api.route('/login')
 class LoginAPI(Resource):
+  @api.expect(auth_parser)
   def post(self):
     username = api.payload.get('username')
     password = api.payload.get('password')

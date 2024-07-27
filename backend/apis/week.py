@@ -42,6 +42,7 @@ class CourseWeekAPI(Resource):
         return marshal(weeks, week_fields)
 
     @jwt_required()
+    @api.expect(week_parser)
     def post(self, course_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -90,6 +91,7 @@ class WeekAPI(Resource):
         return marshal(week, week_fields)
 
     @jwt_required()
+    @api.expect(week_parser)
     def put(self, week_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)

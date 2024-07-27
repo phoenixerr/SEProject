@@ -32,6 +32,7 @@ class UserAPI(Resource):
       return {'message': 'User not found'}, 401
 
   @jwt_required()
+  @api.expect(user_parser)
   def put(self):
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
@@ -51,11 +52,14 @@ class UserAPI(Resource):
     return marshal(user, user_fields)
 
   # register
+  @api.expect(user_parser)
   def post(self):
     args = user_parser.parse_args()
     name = args['name']
     username = args['username']
     password = args['password']
+    if User.query.filter_by(username=username).first():
+      return {'message': 'Username already exists'}, 400
     user = User(name=name, username=username, password=password)
     db.session.add(user)
     db.session.commit()
@@ -91,6 +95,7 @@ class UsergetAPI(Resource):
     return marshal(user, user_fields)
 
   @jwt_required()
+  @api.expect(user_parser)
   def put(self,user_id):
     self_id = get_jwt_identity()
     if not User.query.get(self_id).admin:

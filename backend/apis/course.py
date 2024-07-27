@@ -38,6 +38,7 @@ class CourseAPI(Resource):
       return marshal(courses, course_fields)
 
     @jwt_required()
+    @api.expect(course_parser)
     def post(self):
       user_id = get_jwt_identity()
       user = User.query.get(user_id)
@@ -69,6 +70,7 @@ class CourseAPI(Resource):
     return marshal(course, course_fields)
 
   @jwt_required()
+  @api.expect(course_parser)
   def put(self, course_id):
     user_id = get_jwt_identity()
     user = User.query.get(user_id)

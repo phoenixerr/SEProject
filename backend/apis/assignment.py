@@ -40,6 +40,7 @@ class WeekAssignmentAPI(Resource):
         return marshal(assignments, assignment_fields)
 
     @jwt_required()
+    @api.expect(assignment_parser)
     def post(self, week_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -92,6 +93,7 @@ class AssignmentAPI(Resource):
         return marshal(assignment, assignment_fields)
 
     @jwt_required()
+    @api.expect(assignment_parser)
     def put(self, assignment_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)

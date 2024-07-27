@@ -45,6 +45,7 @@ class QuestionOptionAPI(Resource):
         return marshal(options, option_fields)
 
     @jwt_required()
+    @api.expect(option_parser)
     def post(self, question_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -104,6 +105,7 @@ class OptionAPI(Resource):
         return marshal(option, option_fields)
 
     @jwt_required()
+    @api.expect(option_parser)
     def put(self, option_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)

@@ -43,6 +43,7 @@ class AssignmentQuestionAPI(Resource):
         return marshal(questions, question_fields)
 
     @jwt_required()
+    @api.expect(question_parser)
     def post(self, assignment_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -96,6 +97,7 @@ class QuestionAPI(Resource):
         return marshal(question, question_fields)
 
     @jwt_required()
+    @api.expect(question_parser)
     def put(self, question_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)

@@ -16,6 +16,7 @@ enrollment_parser.add_argument('user_id', type=int, required=True, help='User ID
 @api.route('/student/<int:user_id>/enroll/<int:course_id>')
 class StudentEnrollmentAPI(Resource):
     @jwt_required()
+    @api.expect(enrollment_parser)
     def post(self, user_id, course_id):
         self_id = get_jwt_identity()
         user = User.query.get(self_id)
@@ -82,6 +83,7 @@ class StudentEnrollmentAPI(Resource):
 @api.route('/instructor/<int:user_id>/teach/<int:course_id>')
 class InstructorTeachAPI(Resource):
     @jwt_required()
+    @api.expect(enrollment_parser)
     def post(self, user_id, course_id):
         self_id = get_jwt_identity()
         user = User.query.get(self_id)

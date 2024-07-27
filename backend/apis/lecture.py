@@ -42,6 +42,7 @@ class WeekLectureAPI(Resource):
         return marshal(lectures, lecture_fields)
 
     @jwt_required()
+    @api.expect(lecture_parser)
     def post(self, week_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -90,6 +91,7 @@ class LectureAPI(Resource):
         return marshal(lecture, lecture_fields)
 
     @jwt_required()
+    @api.expect(lecture_parser)
     def put(self, lecture_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -162,7 +164,6 @@ class LectureSummarizeAPI(Resource):
             return {'message': 'User is not an admin or instructor'}, 401
         if user.instructor and course not in user.instructor.courses:
             return {'message': 'User is not an instructor of the course'}, 401
-        args = lecture_parser.parse_args()
         summary = "summary fetched from GENAI" + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
         lecture.summary = summary
         db.session.commit()

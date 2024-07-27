@@ -62,6 +62,7 @@ class StudentAPI(Resource):
         return marshal(student, student_fields)
 
     @jwt_required()
+    @api.expect(student_parser)
     def put(self, student_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
