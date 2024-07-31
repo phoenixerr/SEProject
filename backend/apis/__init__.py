@@ -1,30 +1,34 @@
-from flask_restx import Api, Resource, marshal_with, fields, reqparse, marshal
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+from flask_jwt_extended import (
+    JWTManager,
+    create_access_token,
+    get_jwt_identity,
+    jwt_required,
+)
+from flask_restx import Api, Resource, fields, marshal, marshal_with, reqparse
 from main import app
-from models import db, Course, User, Student, Instructor, Admin
+from models import Admin, Course, Instructor, Student, User, db
 
-
-
-api = Api(app,
-          title='SE Project Team 7',
-          description='This document outlines the collection of all the endpoints used in the project')
+api = Api(
+    app,
+    title="SE Project Team 7",
+    description="This document outlines the collection of all the endpoints used in the project",
+)
 
 jwt = JWTManager(app)
 
-import apis.auth
-import apis.course
-import apis.user
-import apis.enrollment
-import apis.instructor
-import apis.student
-import apis.week
-import apis.lecture
 import apis.assignment
-import apis.question
-import apis.option
-import apis.event
+import apis.auth
 import apis.chat
-
+import apis.course
+import apis.enrollment
+import apis.event
+import apis.instructor
+import apis.lecture
+import apis.option
+import apis.question
+import apis.student
+import apis.user
+import apis.week
 from apis.assignment import api as assignment_namespace
 from apis.auth import api as auth_namespace
 from apis.chat import api as chat_namespace
@@ -53,13 +57,16 @@ api.add_namespace(student_namespace)
 api.add_namespace(user_namespace)
 api.add_namespace(week_namespace)
 
-@api.route('/debug/db_populate')
+
+@api.route("/debug/db_populate")
 class DebugDBPopulateAPI(Resource):
-    @api.doc(description = "Used for debugging.\nAllows us to quickly drop all entried and repopulate the table.")
+    @api.doc(
+        description="Used for debugging.\nAllows us to quickly drop all entried and repopulate the table."
+    )
     def post(self):
         db.drop_all()
         db.create_all()
-        user = User(name='admin', username='admin', password='admin')
+        user = User(name="admin", username="admin", password="admin")
         admin = Admin(user=user)
         db.session.add(user)
         db.session.add(admin)
@@ -73,13 +80,18 @@ class DebugDBPopulateAPI(Resource):
             "Vignesh Babu",
         ]
         for name in students:
-            user = User(name=name, username=name.lower().split()[0], password='1234')
-            student = Student(user=user,cgpa=8.0)
+            user = User(name=name, username=name.lower().split()[0], password="1234")
+            student = Student(user=user, cgpa=8.0)
             db.session.add(user)
             db.session.add(student)
-        instructors = ["Karthik Thiagarajan", "Santhana Krishnan", "Atul PS", "Adarsh Madre"]
+        instructors = [
+            "Karthik Thiagarajan",
+            "Santhana Krishnan",
+            "Atul PS",
+            "Adarsh Madre",
+        ]
         for name in instructors:
-            user = User(name=name, username=name.lower().split()[0], password='1234')
+            user = User(name=name, username=name.lower().split()[0], password="1234")
             instructor = Instructor(user=user)
             db.session.add(user)
             db.session.add(instructor)
@@ -93,7 +105,6 @@ class DebugDBPopulateAPI(Resource):
         for name, level in courses:
             course = Course(name=name, level=level)
             db.session.add(course)
-        
+
         db.session.commit()
-        return {'message': 'Database populated'}
-        
+        return {"message": "Database populated"}
