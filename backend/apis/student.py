@@ -32,7 +32,7 @@ from models import (
     db,
 )
 
-api = Namespace("Student", description="Collection of student endpoints",path='/')
+api = Namespace("Student", description="Collection of student endpoints", path="/")
 
 student_fields = api.model(
     "Student",
@@ -51,7 +51,9 @@ student_parser.add_argument(
 @api.route("/students")
 class StudentsAPI(Resource):
     @jwt_required()
-    @api.doc(description="Return details of all student users.")
+    @api.doc(
+        description="Return details of all student users.", security="jsonWebToken"
+    )
     def get(self):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -85,7 +87,11 @@ class StudentsAPI(Resource):
 @api.route("/student/<int:student_id>")
 class StudentAPI(Resource):
     @jwt_required()
-    @api.doc(description="Return details of student of specified user ID.", path="/")
+    @api.doc(
+        description="Return details of student of specified user ID.",
+        path="/",
+        security="jsonWebToken",
+    )
     def get(self, student_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -102,7 +108,10 @@ class StudentAPI(Resource):
 
     @jwt_required()
     @api.expect(student_parser)
-    @api.doc(description="Modify details of student of specified user ID.")
+    @api.doc(
+        description="Modify details of student of specified user ID.",
+        security="jsonWebToken",
+    )
     def put(self, student_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -120,7 +129,9 @@ class StudentAPI(Resource):
         return marshal(student, student_fields)
 
     @jwt_required()
-    @api.doc(description="Delete  student of specified user ID.")
+    @api.doc(
+        description="Delete  student of specified user ID.", security="jsonWebToken"
+    )
     def delete(self, student_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -142,7 +153,8 @@ class StudentAPI(Resource):
 class CourseStudentsAPI(Resource):
     @jwt_required()
     @api.doc(
-        description="Get all the students registered for course with specified course ID."
+        description="Get all the students registered for course with specified course ID.",
+        security="jsonWebToken",
     )
     def get(self, course_id):
         user_id = get_jwt_identity()
