@@ -46,13 +46,26 @@ lecture_fields = api.model(
     },
 )
 
+
 lecture_input_fields = api.model(
     "Lecture",
     {
-        "week_id": fields.Integer(required=True, description='The Week ID to which the lecture belongs', example=1),
-        "title": fields.String(required=True, description='The Title of the lecture', example="Lists in python"),
-        "url": fields.String(required=True, description='The URL of the lecture', example="https://www.youtube.com/watch?v=LDU_Txk06tM"),
-        "summary": fields.String(required=True, description='The Summary of the lecture', example="Lists in python"),
+        # "week_id": fields.Integer(required=True, description='The Week ID to which the lecture belongs', example=1),
+        "title": fields.String(
+            required=True,
+            description="The Title of the lecture",
+            example="Lists in python",
+        ),
+        "url": fields.String(
+            required=True,
+            description="The URL of the lecture",
+            example="https://www.youtube.com/watch?v=LDU_Txk06tM",
+        ),
+        "summary": fields.String(
+            required=True,
+            description="The Summary of the lecture",
+            example="Lists in python",
+        ),
     },
 )
 
@@ -72,7 +85,7 @@ class WeekLectureAPI(Resource):
     @jwt_required()
     @api.doc(
         description="Returns the lectures present in the week with the specified week ID.",
-        security = 'jsonWebToken'
+        security="jsonWebToken",
     )
     def get(self, week_id):
         user_id = get_jwt_identity()
@@ -94,8 +107,10 @@ class WeekLectureAPI(Resource):
 
     @jwt_required()
     @api.expect(lecture_input_fields)
-    @api.doc(description="Add lectures to the week with the specified week ID.",
-             security = 'jsonWebToken')
+    @api.doc(
+        description="Add lectures to the week with the specified week ID.",
+        security="jsonWebToken",
+    )
     def post(self, week_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -124,8 +139,10 @@ class WeekLectureAPI(Resource):
 @api.route("/lecture/<int:lecture_id>")
 class LectureAPI(Resource):
     @jwt_required()
-    @api.doc(description="Returns the lectures with the specified lecture ID.",
-             security = 'jsonWebToken')
+    @api.doc(
+        description="Returns the lectures with the specified lecture ID.",
+        security="jsonWebToken",
+    )
     def get(self, lecture_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -148,8 +165,10 @@ class LectureAPI(Resource):
 
     @jwt_required()
     @api.expect(lecture_input_fields)
-    @api.doc(description="Modify the lectures with the specified lecture ID.",
-             security = 'jsonWebToken')
+    @api.doc(
+        description="Modify the lectures with the specified lecture ID.",
+        security="jsonWebToken",
+    )
     def put(self, lecture_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -179,8 +198,10 @@ class LectureAPI(Resource):
         return marshal(lecture, lecture_fields)
 
     @jwt_required()
-    @api.doc(description="Delete the lectures with the specified lecture ID.",
-             security = 'jsonWebToken')
+    @api.doc(
+        description="Delete the lectures with the specified lecture ID.",
+        security="jsonWebToken",
+    )
     def delete(self, lecture_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -209,7 +230,7 @@ class LectureSummarizeAPI(Resource):
     @jwt_required()
     @api.doc(
         description="Modify the lectures summary with the specified lecture ID.\nUses Gemini LLM.",
-        security = 'jsonWebToken'
+        security="jsonWebToken",
     )
     def put(self, lecture_id):
         user_id = get_jwt_identity()
