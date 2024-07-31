@@ -66,7 +66,8 @@ class StudentsAPI(Resource):
 
     # make self as student
     @jwt_required()
-    @api.doc(description="Adds current user as a student.")
+    @api.doc(description="Adds current user as a student.",
+             security = 'jsonWebToken')
     def post(self):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)

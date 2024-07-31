@@ -9,7 +9,7 @@ from main import app
 from models import Admin, Course, Instructor, Student, User, db
 
 bearer_authorizations = {
-    'jsonWebToken': {
+    'jsonWeboken': {
         'type': 'apiKey',
         'in': 'header',
         'name': 'Authorization'
