@@ -23,19 +23,6 @@ api = Api(
 
 jwt = JWTManager(app)
 
-import apis.assignment
-import apis.auth
-import apis.chat
-import apis.course
-import apis.enrollment
-import apis.event
-import apis.instructor
-import apis.lecture
-import apis.option
-import apis.question
-import apis.student
-import apis.user
-import apis.week
 from apis.assignment import api as assignment_namespace
 from apis.auth import api as auth_namespace
 from apis.chat import api as chat_namespace
