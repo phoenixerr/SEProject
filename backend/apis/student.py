@@ -5,6 +5,9 @@ from models import db, Course, User, Student, Instructor, Admin, Week, Lecture, 
 from apis import api
 from datetime import datetime
 
+from flask_restx import Namespace
+api = Namespace('Student', description='Collection of student endpoints')
+
 student_fields = api.model('Student', {
     'id': fields.Integer,
     'cgpa': fields.Float,
@@ -16,6 +19,7 @@ student_parser.add_argument('cgpa', type=float, required=True, help='CGPA of the
 @api.route('/students')
 class StudentsAPI(Resource):
     @jwt_required()
+    @api.doc(description = "Return details of all student users.")
     def get(self):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -28,6 +32,7 @@ class StudentsAPI(Resource):
 
     # make self as student
     @jwt_required()
+    @api.doc(description = "Adds current user as a student.")
     def post(self):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -35,7 +40,7 @@ class StudentsAPI(Resource):
             return {'message': 'User not found'}, 401
         if user.student:
             return {'message': 'User is already a student'}, 401
-        if user.instuctor:
+        if user.instructor:
             return {'message': 'User is an instructor'}, 401
         if user.admin:
             return {'message': 'User is an admin'}, 401
@@ -47,6 +52,7 @@ class StudentsAPI(Resource):
 @api.route('/student/<int:student_id>')
 class StudentAPI(Resource):
     @jwt_required()
+    @api.doc(description = "Return details of student of specified user ID.")
     def get(self, student_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -63,6 +69,7 @@ class StudentAPI(Resource):
 
     @jwt_required()
     @api.expect(student_parser)
+    @api.doc(description = "Modify details of student of specified user ID.")
     def put(self, student_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -80,6 +87,7 @@ class StudentAPI(Resource):
         return marshal(student, student_fields)
 
     @jwt_required()
+    @api.doc(description = "Delete  student of specified user ID.")
     def delete(self, student_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -99,6 +107,7 @@ class StudentAPI(Resource):
 @api.route('/course/<int:course_id>/students')
 class CourseStudentsAPI(Resource):
     @jwt_required()
+    @api.doc(description = "Get all the students registered for course with specified course ID.")
     def get(self, course_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)

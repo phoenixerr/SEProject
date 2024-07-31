@@ -5,6 +5,9 @@ from models import db, Course, User, Student, Instructor, Admin, Week, Lecture, 
 from apis import api
 from datetime import datetime
 
+from flask_restx import Namespace
+api = Namespace('Instructor', description='Collection of instructor endpoints')
+
 instructor_fields = api.model('Instructor', {
     'id': fields.Integer,
 })
@@ -14,6 +17,7 @@ instructor_fields = api.model('Instructor', {
 @api.route('/instructors')
 class InstructorsAPI(Resource):
     @jwt_required()
+    @api.doc(description = "Returns all the instructors.")
     def get(self):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -25,6 +29,7 @@ class InstructorsAPI(Resource):
         return marshal(instructors, instructor_fields)
 
     @jwt_required()
+    @api.doc(description = "Add new users as the instructors.")
     def post(self):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -44,6 +49,7 @@ class InstructorsAPI(Resource):
 @api.route('/instructor/<int:instructor_id>')
 class InstructorAPI(Resource):
     @jwt_required()
+    @api.doc(description = "Returns the instructor with specified instructor ID.")
     def get(self, instructor_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -59,6 +65,7 @@ class InstructorAPI(Resource):
         return marshal(instructor, instructor_fields)
 
     @jwt_required()
+    @api.doc(description = "Delete the instructor with specified instructor ID.")
     def delete(self, instructor_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)

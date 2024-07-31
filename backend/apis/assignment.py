@@ -5,6 +5,9 @@ from models import db, Course, User, Student, Instructor, Admin, Week, Lecture, 
 from apis import api
 from datetime import datetime
 
+from flask_restx import Namespace
+api = Namespace('Assignments', description='Collection of assignments endpoints')
+
 assignment_fields = api.model('Assignment', {
     'id': fields.Integer,
     'title': fields.String,
@@ -21,6 +24,7 @@ assignment_parser.add_argument('due_date', type=str, required=True, help='Due da
 @api.route('/week/<int:week_id>/assignments')
 class WeekAssignmentAPI(Resource):
     @jwt_required()
+    @api.doc(description = "Returns all the assignments in the week with the specified week ID of current course")
     def get(self, week_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -41,6 +45,7 @@ class WeekAssignmentAPI(Resource):
 
     @jwt_required()
     @api.expect(assignment_parser)
+    @api.doc(description = "Add assignments to the week with specified week ID of current course")
     def post(self, week_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -72,6 +77,7 @@ class WeekAssignmentAPI(Resource):
 @api.route('/assignment/<int:assignment_id>')
 class AssignmentAPI(Resource):
     @jwt_required()
+    @api.doc(description = "Get assignment with specified assignment ID")
     def get(self, assignment_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -94,6 +100,7 @@ class AssignmentAPI(Resource):
 
     @jwt_required()
     @api.expect(assignment_parser)
+    @api.doc(description = "Modify assignment with specified assignment ID")
     def put(self, assignment_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -130,6 +137,7 @@ class AssignmentAPI(Resource):
         return marshal(assignment, assignment_fields)
 
     @jwt_required()
+    @api.doc(description = "Delete assignment with specified assignment ID")
     def delete(self, assignment_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)

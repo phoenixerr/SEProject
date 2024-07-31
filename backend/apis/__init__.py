@@ -3,9 +3,13 @@ from flask_jwt_extended import JWTManager, jwt_required, create_access_token, ge
 from main import app
 from models import db, Course, User, Student, Instructor, Admin
 
-api = Api(app)
-jwt = JWTManager(app)
 
+
+api = Api(app,
+          title='SE Project Team 7',
+          description='This document outlines the collection of all the endpoints used in the project')
+
+jwt = JWTManager(app)
 
 import apis.auth
 import apis.course
@@ -21,8 +25,37 @@ import apis.option
 import apis.event
 import apis.chat
 
+from apis.assignment import api as assignment_namespace
+from apis.auth import api as auth_namespace
+from apis.chat import api as chat_namespace
+from apis.course import api as course_namespace
+from apis.enrollment import api as enrollment_namespace
+from apis.event import api as event_namespace
+from apis.instructor import api as instructor_namespace
+from apis.lecture import api as lecture_namespace
+from apis.option import api as option_namespace
+from apis.question import api as question_namespace
+from apis.student import api as student_namespace
+from apis.user import api as user_namespace
+from apis.week import api as week_namespace
+
+api.add_namespace(assignment_namespace)
+api.add_namespace(auth_namespace)
+api.add_namespace(chat_namespace)
+api.add_namespace(course_namespace)
+api.add_namespace(enrollment_namespace)
+api.add_namespace(event_namespace)
+api.add_namespace(instructor_namespace)
+api.add_namespace(lecture_namespace)
+api.add_namespace(option_namespace)
+api.add_namespace(question_namespace)
+api.add_namespace(student_namespace)
+api.add_namespace(user_namespace)
+api.add_namespace(week_namespace)
+
 @api.route('/debug/db_populate')
 class DebugDBPopulateAPI(Resource):
+    @api.doc(description = "Used for debugging.\nAllows us to quickly drop all entried and repopulate the table.")
     def post(self):
         db.drop_all()
         db.create_all()

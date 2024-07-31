@@ -4,6 +4,9 @@ from main import app
 from models import db, Course, User, Student, Instructor, Admin
 from apis import api
 
+from flask_restx import Namespace
+api = Namespace('User', description='Collection of user endpoints')
+
 user_fields = api.model('User', {
                         'id': fields.Integer(description='ID of the user'),
                         'name': fields.String(description='Name of the user'),

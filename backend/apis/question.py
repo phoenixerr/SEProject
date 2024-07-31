@@ -6,6 +6,8 @@ from apis import api
 from datetime import datetime
 from apis.option import option_fields
 
+from flask_restx import Namespace
+api = Namespace('Questions', description='Collection of question endpoints')
 
 question_fields = api.model('Question', {
     'id': fields.Integer,
@@ -21,6 +23,7 @@ question_parser.add_argument('is_msq', type=bool, required=True, help='Is the qu
 @api.route('/assignment/<int:assignment_id>/questions')
 class AssignmentQuestionAPI(Resource):
     @jwt_required()
+    @api.doc(description = "Get all the questions in assignment with specified assignment ID.")
     def get(self, assignment_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -44,6 +47,7 @@ class AssignmentQuestionAPI(Resource):
 
     @jwt_required()
     @api.expect(question_parser)
+    @api.doc(description = "Add questions to the assignment with specified assignment ID.")
     def post(self, assignment_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -73,6 +77,7 @@ class AssignmentQuestionAPI(Resource):
 @api.route('/question/<int:question_id>')
 class QuestionAPI(Resource):
     @jwt_required()
+    @api.doc(description = "Return the details of question with specified question ID.")
     def get(self, question_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -98,6 +103,7 @@ class QuestionAPI(Resource):
 
     @jwt_required()
     @api.expect(question_parser)
+    @api.doc(description = "Modify the parameters of question with specified question ID.")
     def put(self, question_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -128,6 +134,7 @@ class QuestionAPI(Resource):
         return marshal(question, question_fields)
 
     @jwt_required()
+    @api.doc(description = "Delete the details of question with specified question ID.")
     def delete(self, question_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -156,6 +163,7 @@ class QuestionAPI(Resource):
 @api.route('/question/<int:question_id>/marked')
 class QuestionMarkedAPI(Resource):
     @jwt_required()
+    @api.doc(description = "Returns options marked by current student for question with specified question ID.")
     def get(self, question_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)

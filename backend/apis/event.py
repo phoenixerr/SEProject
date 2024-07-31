@@ -5,6 +5,9 @@ from models import db, Course, User, Student, Instructor, Admin, Week, Lecture, 
 from apis import api
 from datetime import datetime
 
+from flask_restx import Namespace
+api = Namespace('Events', description='Collection of event endpoints')
+
 event_fields = api.model('Event', {
     'id': fields.Integer,
     'title': fields.String,
@@ -22,6 +25,7 @@ event_parser.add_argument('end', type=str, required=True, help='End date of the 
 @api.route('/course/<int:course_id>/events')
 class CourseEventAPI(Resource):
     @jwt_required()
+    @api.doc(description = "Return all events of current user for specified course ID.")
     def get(self, course_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -39,6 +43,7 @@ class CourseEventAPI(Resource):
 
     @jwt_required()
     @api.expect(event_parser)
+    @api.doc(description = "Add new event for current user for specified course ID.")
     def post(self, course_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -66,6 +71,7 @@ class CourseEventAPI(Resource):
 @api.route('/event/<int:event_id>')
 class EventAPI(Resource):
     @jwt_required()
+    @api.doc(description = "Return event with specified ID.")
     def get(self, event_id):
         event = Event.query.get(event_id)
         if not event:
@@ -75,6 +81,7 @@ class EventAPI(Resource):
         return marshal(event, event_fields)
 
     @jwt_required()
+    @api.doc(description = "Modify event with specified ID.")
     @api.expect(event_parser)
     def put(self, event_id):
         event = Event.query.get(event_id)
@@ -93,6 +100,7 @@ class EventAPI(Resource):
         return marshal(event, event_fields)
 
     @jwt_required()
+    @api.doc(description = "Delete event with specified ID.")
     def delete(self, event_id):
         event = Event.query.get(event_id)
         if not event:

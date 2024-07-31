@@ -5,6 +5,9 @@ from models import db, Course, User, Student, Instructor, Admin, Week, Lecture, 
 from apis import api
 from datetime import datetime
 
+from flask_restx import Namespace
+api = Namespace('Chats', description='Collection of chat endpoints')
+
 chat_fields = api.model('Chat', {
     'id': fields.Integer,
     'prompt': fields.String,
@@ -20,6 +23,7 @@ chat_parser.add_argument('prompt', type=str, required=True, help='Prompt of the 
 @api.route('/course/<int:course_id>/chats')
 class CourseChatAPI(Resource):
     @jwt_required()
+    @api.doc(description = "Retrieves the chat history of the current user for specified course ID.\nUses Calude LLM")
     def get(self, course_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -37,6 +41,7 @@ class CourseChatAPI(Resource):
 
     @jwt_required()
     @api.expect(chat_parser)
+    @api.doc(description = "Add new message in the chat and its response from the LLM for specified course ID.\nUses Claude LLM")
     def post(self, course_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -61,6 +66,7 @@ class CourseChatAPI(Resource):
         return marshal(chat, chat_fields)
 
     @jwt_required()
+    @api.doc(description = "Delete the chat history of the current user for specified course ID.")
     def delete(self, course_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -84,6 +90,7 @@ class CourseChatAPI(Resource):
 @api.route('/chats')
 class ChatAPI(Resource):
     @jwt_required()
+    @api.doc(description = "Retrieves the general chat history of the current user.\nUses Calude LLM")
     def get(self):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -94,6 +101,7 @@ class ChatAPI(Resource):
 
     @jwt_required()
     @api.expect(chat_parser)
+    @api.doc(description = "Add new message in the general chat and its response from the LLM.\nUses Calude LLM")
     def post(self):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -111,6 +119,7 @@ class ChatAPI(Resource):
         return marshal(chat, chat_fields)
 
     @jwt_required()
+    @api.doc(description = "Delete the chat history of the current user.")
     def delete(self):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)

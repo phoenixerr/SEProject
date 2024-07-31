@@ -6,6 +6,9 @@ from apis import api
 import random
 import string
 
+from flask_restx import Namespace
+api = Namespace('Lectures', description='Collection of lecture endpoints')
+
 lecture_fields = api.model('Lecture', {
     'id': fields.Integer,
     'week_id': fields.Integer,
@@ -23,6 +26,7 @@ lecture_parser.add_argument('summary', type=str, required=False, help='Summary o
 @api.route('/week/<int:week_id>/lectures')
 class WeekLectureAPI(Resource):
     @jwt_required()
+    @api.doc(description = "Returns the lectures present in the week with the specified week ID.")
     def get(self, week_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -43,6 +47,7 @@ class WeekLectureAPI(Resource):
 
     @jwt_required()
     @api.expect(lecture_parser)
+    @api.doc(description = "Add lectures to the week with the specified week ID.")
     def post(self, week_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -70,6 +75,7 @@ class WeekLectureAPI(Resource):
 @api.route('/lecture/<int:lecture_id>')
 class LectureAPI(Resource):
     @jwt_required()
+    @api.doc(description = "Returns the lectures with the specified lecture ID.")
     def get(self, lecture_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -92,6 +98,7 @@ class LectureAPI(Resource):
 
     @jwt_required()
     @api.expect(lecture_parser)
+    @api.doc(description = "Modify the lectures with the specified lecture ID.")
     def put(self, lecture_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -121,6 +128,7 @@ class LectureAPI(Resource):
         return marshal(lecture, lecture_fields)
 
     @jwt_required()
+    @api.doc(description = "Delete the lectures with the specified lecture ID.")
     def delete(self, lecture_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -146,6 +154,7 @@ class LectureAPI(Resource):
 @api.route('/lecture/<int:lecture_id>/summarize')
 class LectureSummarizeAPI(Resource):
     @jwt_required()
+    @api.doc(description = "Modify the lectures summary with the specified lecture ID.\nUses Gemini LLM.")
     def put(self, lecture_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
