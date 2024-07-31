@@ -18,18 +18,25 @@ from main import app
 from models import Admin, Course, Instructor, Student, User, db
 
 api = Namespace(
-    "Authosization", description="Collection of authorization endpoints", path="/"
+    "Authorization", description="Collection of authorization endpoints", path="/"
 )
 
 auth_parser = reqparse.RequestParser()
 auth_parser.add_argument("username", type=str, required=True, help="Username")
 auth_parser.add_argument("password", type=str, required=True, help="Password")
 
-login_post = api.model('login', {
-    'username': fields.String(required=True, description='The username', example="admin"),
-    'password': fields.String(required=True, description='The password', example="admin"),
+login_post = api.model(
+    "login",
+    {
+        "username": fields.String(
+            required=True, description="The username", example="admin"
+        ),
+        "password": fields.String(
+            required=True, description="The password", example="admin"
+        ),
+    },
+)
 
-})
 
 @api.route("/login")
 class LoginAPI(Resource):

@@ -38,12 +38,57 @@ api = Namespace("Weeks", description="Collection of week endpoints", path="/")
 week_fields = api.model(
     "Week",
     {
-        "id": fields.Integer,
-        "number": fields.Integer,
-        "course_id": fields.Integer,
-        "summary": fields.String,
+        "id": fields.Integer(required=True, description="ID of the week", example=1),
+        "number": fields.Integer(
+            required=True, description="Number of the week", example=1
+        ),
+        "course_id": fields.Integer(
+            required=True, description="ID of the Course", example=1
+        ),
+        "summary": fields.String(
+            required=False,
+            description="A quick summary",
+            example="In this week we do bla bla and bla",
+        ),
     },
 )
+
+week_input_fields = api.model(
+    "WeekInput",
+    {
+        # "id": fields.Integer(description="ID of the week", example=1),
+        "number": fields.Integer(
+            required=True, description="Number of the week", example=1
+        ),
+        "summary": fields.String(
+            required=False,
+            description="A quick summary",
+            example="In this week we do bla bla and bla",
+        ),
+        "course_id": fields.Integer(
+            required=True, description="ID of the Course", example=1
+        ),
+    },
+)
+
+week_update_fields = api.model(
+    "WeekUpdate",
+    {
+        # "id": fields.Integer(description="ID of the week", example=1),
+        "number": fields.Integer(
+            required=True, description="Number of the week", example=1
+        ),
+        "course_id": fields.Integer(
+            required=True, description="ID of the Course", example=1
+        ),
+        "summary": fields.String(
+            required=False,
+            description="A quick summary",
+            example="In this week we do bla bla and bla",
+        ),
+    },
+)
+
 
 week_parser = reqparse.RequestParser()
 week_parser.add_argument("number", type=int, required=True, help="Number of the week")
@@ -81,7 +126,7 @@ class CourseWeekAPI(Resource):
         return marshal(weeks, week_fields)
 
     @jwt_required()
-    @api.expect(week_parser)
+    @api.expect(week_input_fields)
     @api.doc(
         description="Add summary of new week to the course with specified course ID.",
         security="jsonWebToken",
@@ -141,7 +186,7 @@ class WeekAPI(Resource):
         return marshal(week, week_fields)
 
     @jwt_required()
-    @api.expect(week_parser)
+    @api.expect(week_update_fields)
     @api.doc(
         description="Modify the details of the week with specified week ID.",
         security="jsonWebToken",

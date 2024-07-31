@@ -22,9 +22,32 @@ api = Namespace("User", description="Collection of user endpoints", path="/")
 user_fields = api.model(
     "User",
     {
-        "id": fields.Integer(description="ID of the user"),
-        "name": fields.String(description="Name of the user"),
-        "username": fields.String(description="Username of the user"),
+        "id": fields.Integer(description="ID of the user", example=1, required=True),
+        "name": fields.String(
+            description="Name of the user", example="John Doe", required=True
+        ),
+        "username": fields.String(
+            description="Username of the user", example="johndoe", required=True
+        ),
+        "password": fields.String(
+            description="Password of the user", example="password", required=True
+        ),
+    },
+)
+
+user_input_fields = api.model(
+    "InputUser",
+    {
+        # "id": fields.Integer(description="ID of the user", example=1, required=True),
+        "name": fields.String(
+            description="Name of the user", example="John Doe", required=True
+        ),
+        "username": fields.String(
+            description="Username of the user", example="johndoe", required=True
+        ),
+        "password": fields.String(
+            description="Password of the user", example="password", required=True
+        ),
     },
 )
 
@@ -42,10 +65,7 @@ user_parser.add_argument(
 class UserAPI(Resource):
     @marshal_with(user_fields)
     @jwt_required()
-    @api.doc(
-        description="Return all the users.",
-        security = 'jsonWebToken'
-    )
+    @api.doc(description="Get cureent user details.", security="jsonWebToken")
     def get(self):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -55,11 +75,8 @@ class UserAPI(Resource):
             return {"message": "User not found"}, 401
 
     @jwt_required()
-    @api.expect(user_parser)
-    @api.doc(
-        description="Modify the users details.",
-        security = 'jsonWebToken'
-    )
+    @api.expect(user_input_fields)
+    @api.doc(description="Modify the users details.", security="jsonWebToken")
     def put(self):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -79,11 +96,8 @@ class UserAPI(Resource):
         return marshal(user, user_fields)
 
     # register
-    @api.expect(user_parser)
-    @api.doc(
-        description="Add the new users details.",
-        security = 'jsonWebToken'
-    )
+    @api.expect(user_input_fields)
+    @api.doc(description="Add the new users details.", security="jsonWebToken")
     def post(self):
         args = user_parser.parse_args()
         name = args["name"]
@@ -97,10 +111,7 @@ class UserAPI(Resource):
         return marshal(user, user_fields)
 
     @jwt_required()
-    @api.doc(
-        description="Delete the users details.",
-        security = 'jsonWebToken'
-    )
+    @api.doc(description="Delete the users details.", security="jsonWebToken")
     def delete(self):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -113,10 +124,7 @@ class UserAPI(Resource):
 @api.route("/users")
 class UsersAPI(Resource):
     @marshal_with(user_fields)
-    @api.doc(
-        description="Modify all the users details.",
-        security = 'jsonWebToken'
-    )
+    @api.doc(description="Modify all the users details.", security="jsonWebToken")
     def get(self):
         users = User.query.all()
         return users
@@ -127,7 +135,7 @@ class UsergetAPI(Resource):
     @jwt_required()
     @api.doc(
         description="Return the users details with specified user ID.",
-        security = 'jsonWebToken'
+        security="jsonWebToken",
     )
     def get(self, user_id):
         self_id = get_jwt_identity()
@@ -141,9 +149,9 @@ class UsergetAPI(Resource):
     @jwt_required()
     @api.doc(
         description="Modify the users details with specified user ID.",
-        security = 'jsonWebToken'
+        security="jsonWebToken",
     )
-    @api.expect(user_parser)
+    @api.expect(user_input_fields)
     def put(self, user_id):
         self_id = get_jwt_identity()
         if not User.query.get(self_id).admin:
@@ -167,7 +175,7 @@ class UsergetAPI(Resource):
     @jwt_required()
     @api.doc(
         description="Delete the users details with specified user ID.",
-        security = 'jsonWebToken'
+        security="jsonWebToken",
     )
     def delete(self, user_id):
         self_id = get_jwt_identity()

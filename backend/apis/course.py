@@ -25,10 +25,19 @@ api = Namespace("Course", description="Collection of course endpoints", path="/"
 course_fields = api.model(
     "Course",
     {
-        "id": fields.Integer,
-        "name": fields.String,
-        "level": fields.Integer,
-        "summary": fields.String,
+        # "id": fields.Integer,
+        "name": fields.String(
+            description="Name of the course",
+            example="Programming in Python",
+            required=True,
+        ),
+        "level": fields.Integer(
+            description="Level of the course", example=1, required=True
+        ),
+        "summary": fields.String(
+            description="Summary of the course",
+            example="This course is about programming in Python",
+        ),
     },
 )
 
@@ -41,9 +50,11 @@ course_parser.add_argument(
 
 
 @api.route("/courses")
-@api.doc(description="Returns all the courses along with their details.",
-         security = 'jsonWebToken')
 class CourseAPI(Resource):
+    @api.doc(
+        description="Returns all the courses along with their details.",
+        security="jsonWebToken",
+    )
     @jwt_required()
     def get(self):
         user_id = get_jwt_identity()
@@ -60,9 +71,10 @@ class CourseAPI(Resource):
         return marshal(courses, course_fields)
 
     @jwt_required()
-    @api.doc(description="Add a new course along with its details.",
-             security = 'jsonWebToken')
-    @api.expect(course_parser)
+    @api.doc(
+        description="Add a new course along with its details.", security="jsonWebToken"
+    )
+    @api.expect(course_fields)
     def post(self):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -90,7 +102,7 @@ class CourseAPI(Resource):
     @jwt_required()
     @api.doc(
         description="Returns the course with specified course ID along with their details.",
-        security = 'jsonWebToken'
+        security="jsonWebToken",
     )
     def get(self, course_id):
         course = Course.query.get(course_id)
@@ -99,10 +111,10 @@ class CourseAPI(Resource):
         return marshal(course, course_fields)
 
     @jwt_required()
-    @api.expect(course_parser)
+    @api.expect(course_fields)
     @api.doc(
         description="Modify the course with specified course ID along with their details.",
-        security = 'jsonWebToken'
+        security="jsonWebToken",
     )
     def put(self, course_id):
         user_id = get_jwt_identity()
@@ -134,8 +146,10 @@ class CourseAPI(Resource):
         return marshal(course, course_fields)
 
     @jwt_required()
-    @api.doc(description="Delete the course with specified course ID.",
-             security = 'jsonWebToken')
+    @api.doc(
+        description="Delete the course with specified course ID.",
+        security="jsonWebToken",
+    )
     def delete(self, course_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -155,26 +169,28 @@ class CourseAPI(Resource):
         return {"message": "Course deleted"}
 
 
-@api.route("/course/<int:course_id>/summarize")
-class CourseSummaryAPI(Resource):
-    @jwt_required()
-    @api.doc(description="Modify the summary of the course with the specified ID.",
-             security = 'jsonWebToken')
-    def put(self, course_id):
-        user_id = get_jwt_identity()
-        user = User.query.get(user_id)
-        if not user:
-            return {"message": "User not found"}, 401
-        course = Course.query.get(course_id)
-        if not course:
-            return {"message": "Course not found"}, 401
-        if not user.admin and not user.instructor:
-            return {"message": "User is not an admin or instructor"}, 401
-        if user.instructor and course not in user.instructor.courses:
-            return {"message": "User not an instructor of the course"}, 401
-        summary = "summary fetched from GENAI" + "".join(
-            random.choices(string.ascii_uppercase + string.digits, k=10)
-        )
-        course.summary = summary
-        db.session.commit()
-        return marshal(course, course_fields)
+#! Removed because we don't want AI based course summaries
+
+# @api.route("/course/<int:course_id>/summarize")
+# class CourseSummaryAPI(Resource):
+#     @jwt_required()
+#     @api.doc(description="Modify the summary of the course with the specified ID.",
+#              security = 'jsonWebToken')
+#     def put(self, course_id):
+#         user_id = get_jwt_identity()
+#         user = User.query.get(user_id)
+#         if not user:
+#             return {"message": "User not found"}, 401
+#         course = Course.query.get(course_id)
+#         if not course:
+#             return {"message": "Course not found"}, 401
+#         if not user.admin and not user.instructor:
+#             return {"message": "User is not an admin or instructor"}, 401
+#         if user.instructor and course not in user.instructor.courses:
+#             return {"message": "User not an instructor of the course"}, 401
+#         summary = "summary fetched from GENAI" + "".join(
+#             random.choices(string.ascii_uppercase + string.digits, k=10)
+#         )
+#         course.summary = summary
+#         db.session.commit()
+#         return marshal(course, course_fields)

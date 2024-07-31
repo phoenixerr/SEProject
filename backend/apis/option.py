@@ -38,13 +38,33 @@ api = Namespace(
     path="/",
 )
 
-option_fields = api.model(
+option_fields = api.model(  # for adding an option
     "Option",
     {
-        "id": fields.Integer,
-        "text": fields.String,
-        "is_correct": fields.Boolean,
-        "question_id": fields.Integer,
+        "id": fields.Integer(required=True, description="ID of the option", example=1),
+        "text": fields.String(
+            required=True, description="Text of the option", example="Abc Abc"
+        ),
+        "is_correct": fields.Boolean(
+            required=True,
+            description="Boolean, is the current option correct?",
+            example=True,
+        ),
+    },
+)
+
+option_input_fields = api.model(  # for adding an option
+    "OptionInput",
+    {
+        # "id": fields.Integer(required=True, description="ID of the option", example=1),
+        "text": fields.String(
+            required=True, description="Text of the option", example="Abc Abc"
+        ),
+        "is_correct": fields.Boolean(
+            required=True,
+            description="Boolean, is the current option correct?",
+            example=True,
+        ),
     },
 )
 
@@ -87,7 +107,7 @@ class QuestionOptionAPI(Resource):
         return marshal(options, option_fields)
 
     @jwt_required()
-    @api.expect(option_parser)
+    @api.expect(option_input_fields)
     @api.doc(
         description="Add options to the question with specified question ID.",
         security="jsonWebToken",
@@ -156,7 +176,7 @@ class OptionAPI(Resource):
         return marshal(option, option_fields)
 
     @jwt_required()
-    @api.expect(option_parser)
+    @api.expect(option_input_fields)
     @api.doc(
         description="Modify the option with specified option ID.",
         security="jsonWebToken",
