@@ -64,7 +64,7 @@ class WeekAssignmentAPI(Resource):
     @jwt_required()
     @api.doc(
         description="Returns all the assignments in the week with the specified week ID of current course",
-        params={'week_id':'ID of the user'},
+        params={'week_id':'ID of the Week'},
         security = 'jsonWebToken'
     )
     #@api.param('week_id','ID of the user')
@@ -151,7 +151,7 @@ class AssignmentAPI(Resource):
         return marshal(assignment, assignment_fields)
 
     @jwt_required()
-    @api.expect(assignment_parser)
+    @api.expect(assignment_fields)
     @api.doc(description="Modify assignment with specified assignment ID",
              security = 'jsonWebToken')
     def put(self, assignment_id):
