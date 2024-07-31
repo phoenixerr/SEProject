@@ -47,6 +47,15 @@ chat_fields = api.model(
     },
 )
 
+chat_input_fields = api.model(
+    "Chat",
+    {
+        
+        "prompt": fields.String(required=True, description='The prompt', example="How do I make lists in python?"),
+        
+    },
+)
+
 chat_parser = reqparse.RequestParser()
 chat_parser.add_argument("prompt", type=str, required=True, help="Prompt of the chat")
 
@@ -74,7 +83,7 @@ class CourseChatAPI(Resource):
         return marshal(chats, chat_fields)
 
     @jwt_required()
-    @api.expect(chat_parser)
+    @api.expect(chat_input_fields)
     @api.doc(
         description="Add new message in the chat and its response from the LLM for specified course ID.\nUses Claude LLM",
         security = 'jsonWebToken'
@@ -149,7 +158,7 @@ class ChatAPI(Resource):
         return marshal(chats, chat_fields)
 
     @jwt_required()
-    @api.expect(chat_parser)
+    @api.expect(chat_input_fields)
     @api.doc(
         description="Add new message in the general chat and its response from the LLM.\nUses Calude LLM",
         security = 'jsonWebToken'
