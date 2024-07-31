@@ -9,18 +9,16 @@ from main import app
 from models import Admin, Course, Instructor, Student, User, db
 
 bearer_authorizations = {
-    'jsonWebToken': {
-        'type': 'apiKey',
-        'in': 'header',
-        'name': 'Authorization'
-    }
+    "jsonWebToken": {"type": "apiKey", "in": "header", "name": "Authorization"}
 }
 
 api = Api(
     app,
     title="SE Project Team 7",
     description="This document outlines the collection of all the endpoints used in the project",
-    authorizations=bearer_authorizations
+    authorizations=bearer_authorizations,
+    default="DB Populate and Testing",
+    default_label="DB Populate and Testing",
 )
 
 jwt = JWTManager(app)
