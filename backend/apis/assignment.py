@@ -47,6 +47,24 @@ assignment_fields = api.model(
     },
 )
 
+assignment_post_fields = api.model(
+    "Assignment",
+    {
+        "title": fields.String(required=True, description='The title of the assignment', example="GA1"),
+        "is_graded": fields.Boolean(required=True, description='Is the assignment graded?', example=True),
+        "due_date": fields.DateTime(required=True, description='The duedate of the assignment', example="2024-08-1 23:59:59"),
+    },
+)
+
+assignment_put_fields = api.model(
+    "Assignment",
+    {
+        "title": fields.String(required=True, description='The title of the assignment', example="GA1"),
+        "is_graded": fields.Boolean(required=True, description='Is the assignment graded?', example=True),
+        "due_date": fields.DateTime(required=True, description='The duedate of the assignment', example="2024-08-1 23:59:59"),
+        "week_id": fields.Integer(required=True, description='The Week ID', example=1),
+    },
+)
 assignment_parser = reqparse.RequestParser()
 assignment_parser.add_argument(
     "title", type=str, required=True, help="Title of the assignment"
@@ -64,7 +82,7 @@ class WeekAssignmentAPI(Resource):
     @jwt_required()
     @api.doc(
         description="Returns all the assignments in the week with the specified week ID of current course",
-        params={'week_id':'ID of the Week'},
+        params={'week_id':'ID of the user'},
         security = 'jsonWebToken'
     )
     #@api.param('week_id','ID of the user')
@@ -87,7 +105,7 @@ class WeekAssignmentAPI(Resource):
         return marshal(assignments, assignment_fields)
 
     @jwt_required()
-    @api.expect(assignment_fields)
+    @api.expect(assignment_post_fields)
     @api.doc(
         description="Add assignments to the week with specified week ID of current course",
         security = 'jsonWebToken'
@@ -151,7 +169,7 @@ class AssignmentAPI(Resource):
         return marshal(assignment, assignment_fields)
 
     @jwt_required()
-    @api.expect(assignment_fields)
+    @api.expect(assignment_put_fields)
     @api.doc(description="Modify assignment with specified assignment ID",
              security = 'jsonWebToken')
     def put(self, assignment_id):
