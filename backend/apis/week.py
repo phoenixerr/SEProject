@@ -65,9 +65,9 @@ week_input_fields = api.model(
             description="A quick summary",
             example="In this week we do bla bla and bla",
         ),
-        "course_id": fields.Integer(
-            required=True, description="ID of the Course", example=1
-        ),
+        # "course_id": fields.Integer(
+        #     required=True, description="ID of the Course", example=1
+        # ),
     },
 )
 
