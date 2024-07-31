@@ -41,7 +41,8 @@ course_parser.add_argument(
 
 
 @api.route("/courses")
-@api.doc(description="Returns all the courses along with their details.")
+@api.doc(description="Returns all the courses along with their details.",
+         security = 'jsonWebToken')
 class CourseAPI(Resource):
     @jwt_required()
     def get(self):
@@ -59,7 +60,8 @@ class CourseAPI(Resource):
         return marshal(courses, course_fields)
 
     @jwt_required()
-    @api.doc(description="Add a new course along with its details.")
+    @api.doc(description="Add a new course along with its details.",
+             security = 'jsonWebToken')
     @api.expect(course_parser)
     def post(self):
         user_id = get_jwt_identity()
@@ -87,7 +89,8 @@ class CourseAPI(Resource):
 class CourseAPI(Resource):
     @jwt_required()
     @api.doc(
-        description="Returns the course with specified course ID along with their details."
+        description="Returns the course with specified course ID along with their details.",
+        security = 'jsonWebToken'
     )
     def get(self, course_id):
         course = Course.query.get(course_id)
@@ -98,7 +101,8 @@ class CourseAPI(Resource):
     @jwt_required()
     @api.expect(course_parser)
     @api.doc(
-        description="Modify the course with specified course ID along with their details."
+        description="Modify the course with specified course ID along with their details.",
+        security = 'jsonWebToken'
     )
     def put(self, course_id):
         user_id = get_jwt_identity()
@@ -130,7 +134,8 @@ class CourseAPI(Resource):
         return marshal(course, course_fields)
 
     @jwt_required()
-    @api.doc(description="Delete the course with specified course ID.")
+    @api.doc(description="Delete the course with specified course ID.",
+             security = 'jsonWebToken')
     def delete(self, course_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -153,7 +158,8 @@ class CourseAPI(Resource):
 @api.route("/course/<int:course_id>/summarize")
 class CourseSummaryAPI(Resource):
     @jwt_required()
-    @api.doc(description="Modify the summary of the course with the specified ID.")
+    @api.doc(description="Modify the summary of the course with the specified ID.",
+             security = 'jsonWebToken')
     def put(self, course_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)

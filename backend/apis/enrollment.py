@@ -38,7 +38,8 @@ enrollment_parser.add_argument("user_id", type=int, required=True, help="User ID
 class StudentEnrollmentAPI(Resource):
     @jwt_required()
     @api.doc(
-        description="Return if a student of specified user ID is enrolled to course of specified course ID."
+        description="Return if a student of specified user ID is enrolled to course of specified course ID.",
+        security = 'jsonWebToken'
     )
     def get(self, user_id, course_id):
         self_id = get_jwt_identity()
@@ -64,7 +65,8 @@ class StudentEnrollmentAPI(Resource):
     @jwt_required()
     @api.expect(enrollment_parser)
     @api.doc(
-        description="Add a student of specified user ID to course of specified course ID."
+        description="Add a student of specified user ID to course of specified course ID.",
+        security = 'jsonWebToken'
     )
     def post(self, user_id, course_id):
         self_id = get_jwt_identity()
@@ -91,7 +93,8 @@ class StudentEnrollmentAPI(Resource):
 
     @jwt_required()
     @api.doc(
-        description="Delete a student of specified user ID from course of specified user ID."
+        description="Delete a student of specified user ID from course of specified user ID.",
+        security = 'jsonWebToken'
     )
     def delete(self, user_id, course_id):
         self_id = get_jwt_identity()
@@ -117,7 +120,8 @@ class StudentEnrollmentAPI(Resource):
 class InstructorTeachAPI(Resource):
     @jwt_required()
     @api.doc(
-        description="Allows to check if the instructor with specified user ID is teaching course with specified ID."
+        description="Allows to check if the instructor with specified user ID is teaching course with specified ID.",
+        security = 'jsonWebToken'
     )
     def get(self, user_id, course_id):
         self_id = get_jwt_identity()
@@ -142,7 +146,8 @@ class InstructorTeachAPI(Resource):
 
     @jwt_required()
     @api.doc(
-        description="Add instructor with specified user ID to teach course of specified course ID."
+        description="Add instructor with specified user ID to teach course of specified course ID.",
+        security = 'jsonWebToken'
     )
     @api.expect(enrollment_parser)
     def post(self, user_id, course_id):
@@ -170,7 +175,8 @@ class InstructorTeachAPI(Resource):
 
     @jwt_required()
     @api.doc(
-        description="Delete the instructor with specified user ID from course with specified ID."
+        description="Delete the instructor with specified user ID from course with specified ID.",
+        security = 'jsonWebToken'
     )
     def delete(self, user_id, course_id):
         self_id = get_jwt_identity()

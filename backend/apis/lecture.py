@@ -61,7 +61,8 @@ lecture_parser.add_argument(
 class WeekLectureAPI(Resource):
     @jwt_required()
     @api.doc(
-        description="Returns the lectures present in the week with the specified week ID."
+        description="Returns the lectures present in the week with the specified week ID.",
+        security = 'jsonWebToken'
     )
     def get(self, week_id):
         user_id = get_jwt_identity()
@@ -83,7 +84,8 @@ class WeekLectureAPI(Resource):
 
     @jwt_required()
     @api.expect(lecture_parser)
-    @api.doc(description="Add lectures to the week with the specified week ID.")
+    @api.doc(description="Add lectures to the week with the specified week ID.",
+             security = 'jsonWebToken')
     def post(self, week_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -112,7 +114,8 @@ class WeekLectureAPI(Resource):
 @api.route("/lecture/<int:lecture_id>")
 class LectureAPI(Resource):
     @jwt_required()
-    @api.doc(description="Returns the lectures with the specified lecture ID.")
+    @api.doc(description="Returns the lectures with the specified lecture ID.",
+             security = 'jsonWebToken')
     def get(self, lecture_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -135,7 +138,8 @@ class LectureAPI(Resource):
 
     @jwt_required()
     @api.expect(lecture_parser)
-    @api.doc(description="Modify the lectures with the specified lecture ID.")
+    @api.doc(description="Modify the lectures with the specified lecture ID.",
+             security = 'jsonWebToken')
     def put(self, lecture_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -165,7 +169,8 @@ class LectureAPI(Resource):
         return marshal(lecture, lecture_fields)
 
     @jwt_required()
-    @api.doc(description="Delete the lectures with the specified lecture ID.")
+    @api.doc(description="Delete the lectures with the specified lecture ID.",
+             security = 'jsonWebToken')
     def delete(self, lecture_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -193,7 +198,8 @@ class LectureAPI(Resource):
 class LectureSummarizeAPI(Resource):
     @jwt_required()
     @api.doc(
-        description="Modify the lectures summary with the specified lecture ID.\nUses Gemini LLM."
+        description="Modify the lectures summary with the specified lecture ID.\nUses Gemini LLM.",
+        security = 'jsonWebToken'
     )
     def put(self, lecture_id):
         user_id = get_jwt_identity()
