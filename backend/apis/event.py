@@ -39,13 +39,22 @@ api = Namespace("Events", description="Collection of event endpoints", path="/")
 event_fields = api.model(
     "Event",
     {
-        "id": fields.Integer,
-        "title": fields.String,
-        "start": fields.DateTime,
-        "end": fields.DateTime,
-        "course_id": fields.Integer,
-        "user_id": fields.Integer,
+        "id": fields.Integer(required=True, description='The event ID', example=1),
+        "title": fields.String(required=True, description='The Title of the Event', example="OPPE due"),
+        "start": fields.DateTime(required=True, description='The Start date of the event', example="2024-08-01 23:59:59"),
+        "end": fields.DateTime(required=True, description='The end date of the event', example="2024-08-04 23:59:59"),
+        "course_id": fields.Integer(required=True, description='The event ID', example=1),
+        "user_id": fields.Integer(required=True, description='The event ID', example=9),
     },
+)
+
+event_input_fields = api.model(
+    "Event",
+    {
+        "title": fields.String(required=True, description='The Title of the Event', example="OPPE due"),
+        "start": fields.DateTime(required=True, description='The Start date of the event', example="2024-08-01 23:59:59"),
+        "end": fields.DateTime(required=True, description='The end date of the event', example="2024-08-04 23:59:59"),
+      },
 )
 
 event_parser = reqparse.RequestParser()
@@ -79,7 +88,7 @@ class CourseEventAPI(Resource):
         return marshal(events, event_fields)
 
     @jwt_required()
-    @api.expect(event_parser)
+    @api.expect(event_input_fields)
     @api.doc(description="Add new event for current user for specified course ID.",
              security = 'jsonWebToken')
     def post(self, course_id):
@@ -125,7 +134,7 @@ class EventAPI(Resource):
     @jwt_required()
     @api.doc(description="Modify event with specified ID.",
              security = 'jsonWebToken')
-    @api.expect(event_parser)
+    @api.expect(event_input_fields)
     def put(self, event_id):
         event = Event.query.get(event_id)
         if not event:

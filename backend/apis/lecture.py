@@ -46,6 +46,16 @@ lecture_fields = api.model(
     },
 )
 
+lecture_input_fields = api.model(
+    "Lecture",
+    {
+        "week_id": fields.Integer(required=True, description='The Week ID to which the lecture belongs', example=1),
+        "title": fields.String(required=True, description='The Title of the lecture', example="Lists in python"),
+        "url": fields.String(required=True, description='The URL of the lecture', example="https://www.youtube.com/watch?v=LDU_Txk06tM"),
+        "summary": fields.String(required=True, description='The Summary of the lecture', example="Lists in python"),
+    },
+)
+
 lecture_parser = reqparse.RequestParser()
 lecture_parser.add_argument("week_id", type=int, required=True, help="Week ID")
 lecture_parser.add_argument(
@@ -83,7 +93,7 @@ class WeekLectureAPI(Resource):
         return marshal(lectures, lecture_fields)
 
     @jwt_required()
-    @api.expect(lecture_parser)
+    @api.expect(lecture_input_fields)
     @api.doc(description="Add lectures to the week with the specified week ID.",
              security = 'jsonWebToken')
     def post(self, week_id):
@@ -137,7 +147,7 @@ class LectureAPI(Resource):
         return marshal(lecture, lecture_fields)
 
     @jwt_required()
-    @api.expect(lecture_parser)
+    @api.expect(lecture_input_fields)
     @api.doc(description="Modify the lectures with the specified lecture ID.",
              security = 'jsonWebToken')
     def put(self, lecture_id):

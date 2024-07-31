@@ -45,6 +45,14 @@ question_fields = api.model(
     },
 )
 
+question_input_fields = api.model(
+    "Question",
+    {
+        "text": fields.String(required=True, description='The text of the question', example='What are examples of lists ih python?'),
+        "is_msq": fields.Boolean(required=True, description='Is the question multiple select?', example=False),
+    },
+)
+
 question_parser = reqparse.RequestParser()
 question_parser.add_argument(
     "text", type=str, required=True, help="Text of the question"
@@ -83,7 +91,7 @@ class AssignmentQuestionAPI(Resource):
         return marshal(questions, question_fields)
 
     @jwt_required()
-    @api.expect(question_parser)
+    @api.expect(question_input_fields)
     @api.doc(
         description="Add questions to the assignment with specified assignment ID.",
         security="jsonWebToken",
@@ -146,7 +154,7 @@ class QuestionAPI(Resource):
         return marshal(question, question_fields)
 
     @jwt_required()
-    @api.expect(question_parser)
+    @api.expect(question_input_fields)
     @api.doc(
         description="Modify the parameters of question with specified question ID.",
         security="jsonWebToken",

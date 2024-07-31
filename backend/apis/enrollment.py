@@ -24,8 +24,8 @@ api = Namespace(
 enrollment_fields = api.model(
     "Enrollment",
     {
-        "course_id": fields.Integer,
-        "user_id": fields.Integer,
+        "course_id": fields.Integer(required=True, description='The course ID', example=1),
+        "user_id": fields.Integer(required=True, description='The user ID', example=9),
     },
 )
 
@@ -63,7 +63,7 @@ class StudentEnrollmentAPI(Resource):
         return marshal(response, enrollment_fields), 200
 
     @jwt_required()
-    @api.expect(enrollment_parser)
+    @api.expect(enrollment_fields)
     @api.doc(
         description="Add a student of specified user ID to course of specified course ID.",
         security = 'jsonWebToken'
@@ -149,7 +149,7 @@ class InstructorTeachAPI(Resource):
         description="Add instructor with specified user ID to teach course of specified course ID.",
         security = 'jsonWebToken'
     )
-    @api.expect(enrollment_parser)
+    @api.expect(enrollment_fields)
     def post(self, user_id, course_id):
         self_id = get_jwt_identity()
         user = User.query.get(self_id)

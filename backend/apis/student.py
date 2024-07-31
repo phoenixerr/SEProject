@@ -42,6 +42,13 @@ student_fields = api.model(
     },
 )
 
+student_input_fields = api.model(
+    "Student",
+    {
+        "cgpa": fields.Float(required=True, description='The Student CGPA', example=9.0),
+    },
+)
+
 student_parser = reqparse.RequestParser()
 student_parser.add_argument(
     "cgpa", type=float, required=True, help="CGPA of the student"
@@ -108,7 +115,7 @@ class StudentAPI(Resource):
         return marshal(student, student_fields)
 
     @jwt_required()
-    @api.expect(student_parser)
+    @api.expect(student_input_fields)
     @api.doc(
         description="Modify details of student of specified user ID.",
         security="jsonWebToken",
