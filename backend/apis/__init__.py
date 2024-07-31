@@ -8,10 +8,19 @@ from flask_restx import Api, Resource, fields, marshal, marshal_with, reqparse
 from main import app
 from models import Admin, Course, Instructor, Student, User, db
 
+bearer_authorizations = {
+    'jsonWebToken': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization'
+    }
+}
+
 api = Api(
     app,
     title="SE Project Team 7",
     description="This document outlines the collection of all the endpoints used in the project",
+    authorizations=bearer_authorizations
 )
 
 jwt = JWTManager(app)

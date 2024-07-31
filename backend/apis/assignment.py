@@ -39,11 +39,11 @@ api = Namespace(
 assignment_fields = api.model(
     "Assignment",
     {
-        "id": fields.Integer,
-        "title": fields.String,
-        "is_graded": fields.Boolean,
-        "due_date": fields.DateTime,
-        "week_id": fields.Integer,
+        "id": fields.Integer(required=True, description='The assignment ID', example=1),
+        "title": fields.String(required=True, description='The title of the assignment', example="GA1"),
+        "is_graded": fields.Boolean(required=True, description='Is the assignment graded?', example=True),
+        "due_date": fields.DateTime(required=True, description='The duedate of the assignment', example="2024-08-1 23:59:59"),
+        "week_id": fields.Integer(required=True, description='The Week ID', example=1),
     },
 )
 
@@ -63,8 +63,11 @@ assignment_parser.add_argument(
 class WeekAssignmentAPI(Resource):
     @jwt_required()
     @api.doc(
-        description="Returns all the assignments in the week with the specified week ID of current course"
+        description="Returns all the assignments in the week with the specified week ID of current course",
+        params={'week_id':'ID of the user'},
+        security = 'jsonWebToken'
     )
+    #@api.param('week_id','ID of the user')
     def get(self, week_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -84,9 +87,10 @@ class WeekAssignmentAPI(Resource):
         return marshal(assignments, assignment_fields)
 
     @jwt_required()
-    @api.expect(assignment_parser)
+    @api.expect(assignment_fields)
     @api.doc(
-        description="Add assignments to the week with specified week ID of current course"
+        description="Add assignments to the week with specified week ID of current course",
+        security = 'jsonWebToken'
     )
     def post(self, week_id):
         user_id = get_jwt_identity()
@@ -124,7 +128,8 @@ class WeekAssignmentAPI(Resource):
 @api.route("/assignment/<int:assignment_id>")
 class AssignmentAPI(Resource):
     @jwt_required()
-    @api.doc(description="Get assignment with specified assignment ID")
+    @api.doc(description="Get assignment with specified assignment ID",
+             security = 'jsonWebToken')
     def get(self, assignment_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -147,7 +152,8 @@ class AssignmentAPI(Resource):
 
     @jwt_required()
     @api.expect(assignment_parser)
-    @api.doc(description="Modify assignment with specified assignment ID")
+    @api.doc(description="Modify assignment with specified assignment ID",
+             security = 'jsonWebToken')
     def put(self, assignment_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -186,7 +192,8 @@ class AssignmentAPI(Resource):
         return marshal(assignment, assignment_fields)
 
     @jwt_required()
-    @api.doc(description="Delete assignment with specified assignment ID")
+    @api.doc(description="Delete assignment with specified assignment ID",
+             security = 'jsonWebToken')
     def delete(self, assignment_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)

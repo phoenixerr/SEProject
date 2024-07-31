@@ -32,7 +32,7 @@ from models import (
     db,
 )
 
-api = Namespace("Student", description="Collection of student endpoints")
+api = Namespace("Student", description="Collection of student endpoints",path='/')
 
 student_fields = api.model(
     "Student",

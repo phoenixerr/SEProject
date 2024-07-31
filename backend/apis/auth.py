@@ -25,10 +25,15 @@ auth_parser = reqparse.RequestParser()
 auth_parser.add_argument("username", type=str, required=True, help="Username")
 auth_parser.add_argument("password", type=str, required=True, help="Password")
 
+login_post = api.model('login', {
+    'username': fields.String(required=True, description='The username', example="admin"),
+    'password': fields.String(required=True, description='The password', example="admin"),
+
+})
 
 @api.route("/login")
 class LoginAPI(Resource):
-    @api.expect(auth_parser)
+    @api.expect(login_post)
     @api.doc(description="This is the login endpoint")
     def post(self):
         username = api.payload.get("username")
