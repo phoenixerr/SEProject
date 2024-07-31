@@ -58,7 +58,8 @@ question_parser.add_argument(
 class AssignmentQuestionAPI(Resource):
     @jwt_required()
     @api.doc(
-        description="Get all the questions in assignment with specified assignment ID."
+        description="Get all the questions in assignment with specified assignment ID.",
+        security="jsonWebToken",
     )
     def get(self, assignment_id):
         user_id = get_jwt_identity()
@@ -84,7 +85,8 @@ class AssignmentQuestionAPI(Resource):
     @jwt_required()
     @api.expect(question_parser)
     @api.doc(
-        description="Add questions to the assignment with specified assignment ID."
+        description="Add questions to the assignment with specified assignment ID.",
+        security="jsonWebToken",
     )
     def post(self, assignment_id):
         user_id = get_jwt_identity()
@@ -116,7 +118,10 @@ class AssignmentQuestionAPI(Resource):
 @api.route("/question/<int:question_id>")
 class QuestionAPI(Resource):
     @jwt_required()
-    @api.doc(description="Return the details of question with specified question ID.")
+    @api.doc(
+        description="Return the details of question with specified question ID.",
+        security="jsonWebToken",
+    )
     def get(self, question_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -143,7 +148,8 @@ class QuestionAPI(Resource):
     @jwt_required()
     @api.expect(question_parser)
     @api.doc(
-        description="Modify the parameters of question with specified question ID."
+        description="Modify the parameters of question with specified question ID.",
+        security="jsonWebToken",
     )
     def put(self, question_id):
         user_id = get_jwt_identity()
@@ -175,7 +181,10 @@ class QuestionAPI(Resource):
         return marshal(question, question_fields)
 
     @jwt_required()
-    @api.doc(description="Delete the details of question with specified question ID.")
+    @api.doc(
+        description="Delete the details of question with specified question ID.",
+        security="jsonWebToken",
+    )
     def delete(self, question_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -206,7 +215,8 @@ class QuestionAPI(Resource):
 class QuestionMarkedAPI(Resource):
     @jwt_required()
     @api.doc(
-        description="Returns options marked by current student for question with specified question ID."
+        description="Returns options marked by current student for question with specified question ID.",
+        security="jsonWebToken",
     )
     def get(self, question_id):
         user_id = get_jwt_identity()

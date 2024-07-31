@@ -59,7 +59,8 @@ option_parser.add_argument(
 class QuestionOptionAPI(Resource):
     @jwt_required()
     @api.doc(
-        description="Returns all the option of the question with specified question ID."
+        description="Returns all the option of the question with specified question ID.",
+        security="jsonWebToken",
     )
     def get(self, question_id):
         user_id = get_jwt_identity()
@@ -87,7 +88,10 @@ class QuestionOptionAPI(Resource):
 
     @jwt_required()
     @api.expect(option_parser)
-    @api.doc(description="Add options to the question with specified question ID.")
+    @api.doc(
+        description="Add options to the question with specified question ID.",
+        security="jsonWebToken",
+    )
     def post(self, question_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -121,7 +125,10 @@ class QuestionOptionAPI(Resource):
 @api.route("/option/<int:option_id>")
 class OptionAPI(Resource):
     @jwt_required()
-    @api.doc(description="Returns the option with specified option ID.")
+    @api.doc(
+        description="Returns the option with specified option ID.",
+        security="jsonWebToken",
+    )
     def get(self, option_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -150,7 +157,10 @@ class OptionAPI(Resource):
 
     @jwt_required()
     @api.expect(option_parser)
-    @api.doc(description="Modify the option with specified option ID.")
+    @api.doc(
+        description="Modify the option with specified option ID.",
+        security="jsonWebToken",
+    )
     def put(self, option_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -187,7 +197,10 @@ class OptionAPI(Resource):
         return marshal(option, option_fields)
 
     @jwt_required()
-    @api.doc(description="Delete the option with specified option ID.")
+    @api.doc(
+        description="Delete the option with specified option ID.",
+        security="jsonWebToken",
+    )
     def delete(self, option_id):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -221,7 +234,9 @@ class OptionAPI(Resource):
 
 
 @api.route("/option/<int:option_id>/submit")
-@api.doc(description="Submit the option with specified option ID.")
+@api.doc(
+    description="Submit the option with specified option ID.", security="jsonWebToken"
+)
 class OptionSubmitAPI(Resource):
     @jwt_required()
     def post(self, option_id):
@@ -260,7 +275,8 @@ class OptionSubmitAPI(Resource):
 
     @jwt_required()
     @api.doc(
-        description="Delete the submission of the option with specified option ID."
+        description="Delete the submission of the option with specified option ID.",
+        security="jsonWebToken",
     )
     def delete(self, option_id):
         user_id = get_jwt_identity()
