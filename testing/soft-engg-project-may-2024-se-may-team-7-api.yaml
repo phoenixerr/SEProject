@@ -1,0 +1,1309 @@
+swagger: '2.0'
+basePath: /
+paths:
+  /assignment/{assignment_id}:
+    parameters:
+      - name: assignment_id
+        in: path
+        required: true
+        type: integer
+    delete:
+      responses:
+        '200':
+          description: Success
+      description: Delete assignment with specified assignment ID
+      operationId: delete_assignment_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Assignments
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Get assignment with specified assignment ID
+      operationId: get_assignment_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Assignments
+    put:
+      responses:
+        '200':
+          description: Success
+      description: Modify assignment with specified assignment ID
+      operationId: put_assignment_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Assignment'
+      security:
+        - jsonWebToken: []
+      tags:
+        - Assignments
+  /assignment/{assignment_id}/questions:
+    parameters:
+      - name: assignment_id
+        in: path
+        required: true
+        type: integer
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Get all the questions in assignment with specified assignment ID.
+      operationId: get_assignment_question_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Questions
+    post:
+      responses:
+        '200':
+          description: Success
+      description: Add questions to the assignment with specified assignment ID.
+      operationId: post_assignment_question_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Question'
+      security:
+        - jsonWebToken: []
+      tags:
+        - Questions
+  /chats:
+    delete:
+      responses:
+        '200':
+          description: Success
+      description: Delete the chat history of the current user.
+      operationId: delete_chat_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Chats
+    get:
+      responses:
+        '200':
+          description: Success
+      description: |-
+        Retrieves the general chat history of the current user.
+        Uses Calude LLM
+      operationId: get_chat_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Chats
+    post:
+      responses:
+        '200':
+          description: Success
+      description: |-
+        Add new message in the general chat and its response from the LLM.
+        Uses Calude LLM
+      operationId: post_chat_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Chat'
+      security:
+        - jsonWebToken: []
+      tags:
+        - Chats
+  /course/{course_id}:
+    parameters:
+      - name: course_id
+        in: path
+        required: true
+        type: integer
+    delete:
+      responses:
+        '200':
+          description: Success
+      description: Delete the course with specified course ID.
+      operationId: delete_course_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Course
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Returns the course with specified course ID along with their details.
+      operationId: get_course_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Course
+    put:
+      responses:
+        '200':
+          description: Success
+      description: Modify the course with specified course ID along with their details.
+      operationId: put_course_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Course'
+      security:
+        - jsonWebToken: []
+      tags:
+        - Course
+  /course/{course_id}/chats:
+    parameters:
+      - name: course_id
+        in: path
+        required: true
+        type: integer
+    delete:
+      responses:
+        '200':
+          description: Success
+      description: Delete the chat history of the current user for specified course ID.
+      operationId: delete_course_chat_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Chats
+    get:
+      responses:
+        '200':
+          description: Success
+      description: |-
+        Retrieves the chat history of the current user for specified course ID.
+        Uses Calude LLM
+      operationId: get_course_chat_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Chats
+    post:
+      responses:
+        '200':
+          description: Success
+      description: >-
+        Add new message in the chat and its response from the LLM for specified
+        course ID.
+
+        Uses Claude LLM
+      operationId: post_course_chat_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Chat'
+      security:
+        - jsonWebToken: []
+      tags:
+        - Chats
+  /course/{course_id}/events:
+    parameters:
+      - name: course_id
+        in: path
+        required: true
+        type: integer
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Return all events of current user for specified course ID.
+      operationId: get_course_event_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Events
+    post:
+      responses:
+        '200':
+          description: Success
+      description: Add new event for current user for specified course ID.
+      operationId: post_course_event_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Event'
+      security:
+        - jsonWebToken: []
+      tags:
+        - Events
+  /course/{course_id}/students:
+    parameters:
+      - name: course_id
+        in: path
+        required: true
+        type: integer
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Get all the students registered for course with specified course ID.
+      operationId: get_course_students_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Student
+  /course/{course_id}/weeks:
+    parameters:
+      - name: course_id
+        in: path
+        required: true
+        type: integer
+    get:
+      responses:
+        '200':
+          description: Success
+      description: >-
+        Returns the summary of all the weeks of the course with specified course
+        ID.
+      operationId: get_course_week_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Weeks
+    post:
+      responses:
+        '200':
+          description: Success
+      description: Add summary of new week to the course with specified course ID.
+      operationId: post_course_week_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/WeekInput'
+      security:
+        - jsonWebToken: []
+      tags:
+        - Weeks
+  /courses:
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Returns all the courses along with their details.
+      operationId: get_all_course_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Course
+    post:
+      responses:
+        '200':
+          description: Success
+      description: Add a new course along with its details.
+      operationId: post_course_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Course'
+      security:
+        - jsonWebToken: []
+      tags:
+        - Course
+  /debug/db_populate:
+    post:
+      responses:
+        '200':
+          description: Success
+      description: |-
+        Used for debugging.
+        Allows us to quickly drop all entried and repopulate the table.
+      operationId: post_debug_db_populate_api
+      tags:
+        - DB Populate and Testing
+  /event/{event_id}:
+    parameters:
+      - name: event_id
+        in: path
+        required: true
+        type: integer
+    delete:
+      responses:
+        '200':
+          description: Success
+      description: Delete event with specified ID.
+      operationId: delete_event_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Events
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Return event with specified ID.
+      operationId: get_event_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Events
+    put:
+      responses:
+        '200':
+          description: Success
+      description: Modify event with specified ID.
+      operationId: put_event_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Event'
+      security:
+        - jsonWebToken: []
+      tags:
+        - Events
+  /instructor/{instructor_id}:
+    parameters:
+      - name: instructor_id
+        in: path
+        required: true
+        type: integer
+    delete:
+      responses:
+        '200':
+          description: Success
+      description: Delete the instructor with specified instructor ID.
+      operationId: delete_instructor_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Instructor
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Returns the instructor with specified instructor ID.
+      operationId: get_instructor_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Instructor
+  /instructor/{user_id}/teach/{course_id}:
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        type: integer
+      - name: course_id
+        in: path
+        required: true
+        type: integer
+    delete:
+      responses:
+        '200':
+          description: Success
+      description: >-
+        Delete the instructor with specified user ID from course with specified
+        ID.
+      operationId: delete_instructor_teach_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Enrollments
+    get:
+      responses:
+        '200':
+          description: Success
+      description: >-
+        Allows to check if the instructor with specified user ID is teaching
+        course with specified ID.
+      operationId: get_instructor_teach_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Enrollments
+    post:
+      responses:
+        '200':
+          description: Success
+      description: >-
+        Add instructor with specified user ID to teach course of specified
+        course ID.
+      operationId: post_instructor_teach_api
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          type: integer
+          description: User ID
+        - name: course_id
+          in: query
+          required: true
+          type: integer
+          description: Course ID
+      security:
+        - jsonWebToken: []
+      tags:
+        - Enrollments
+  /instructors:
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Returns all the instructors.
+      operationId: get_instructors_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Instructor
+    post:
+      responses:
+        '200':
+          description: Success
+      description: Add new users as the instructors.
+      operationId: post_instructors_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Instructor
+  /lecture/{lecture_id}:
+    parameters:
+      - name: lecture_id
+        in: path
+        required: true
+        type: integer
+    delete:
+      responses:
+        '200':
+          description: Success
+      description: Delete the lectures with the specified lecture ID.
+      operationId: delete_lecture_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Lectures
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Returns the lectures with the specified lecture ID.
+      operationId: get_lecture_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Lectures
+    put:
+      responses:
+        '200':
+          description: Success
+      description: Modify the lectures with the specified lecture ID.
+      operationId: put_lecture_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Lecture'
+      security:
+        - jsonWebToken: []
+      tags:
+        - Lectures
+  /lecture/{lecture_id}/summarize:
+    parameters:
+      - name: lecture_id
+        in: path
+        required: true
+        type: integer
+    put:
+      responses:
+        '200':
+          description: Success
+      description: |-
+        Modify the lectures summary with the specified lecture ID.
+        Uses Gemini LLM.
+      operationId: put_lecture_summarize_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Lectures
+  /login:
+    post:
+      responses:
+        '200':
+          description: Success
+      description: This is the login endpoint
+      operationId: post_login_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/login'
+      tags:
+        - Authorization
+  /option/{option_id}:
+    parameters:
+      - name: option_id
+        in: path
+        required: true
+        type: integer
+    delete:
+      responses:
+        '200':
+          description: Success
+      description: Delete the option with specified option ID.
+      operationId: delete_option_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Options
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Returns the option with specified option ID.
+      operationId: get_option_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Options
+    put:
+      responses:
+        '200':
+          description: Success
+      description: Modify the option with specified option ID.
+      operationId: put_option_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/OptionInput'
+      security:
+        - jsonWebToken: []
+      tags:
+        - Options
+  /option/{option_id}/submit:
+    parameters:
+      - name: option_id
+        in: path
+        required: true
+        type: integer
+    delete:
+      responses:
+        '200':
+          description: Success
+      description: |-
+        Submit the option with specified option ID.
+        Delete the submission of the option with specified option ID.
+      operationId: delete_option_submit_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Options
+    post:
+      responses:
+        '200':
+          description: Success
+      description: Submit the option with specified option ID.
+      operationId: post_option_submit_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Options
+  /question/{question_id}:
+    parameters:
+      - name: question_id
+        in: path
+        required: true
+        type: integer
+    delete:
+      responses:
+        '200':
+          description: Success
+      description: Delete the details of question with specified question ID.
+      operationId: delete_question_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Questions
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Return the details of question with specified question ID.
+      operationId: get_question_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Questions
+    put:
+      responses:
+        '200':
+          description: Success
+      description: Modify the parameters of question with specified question ID.
+      operationId: put_question_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Question'
+      security:
+        - jsonWebToken: []
+      tags:
+        - Questions
+  /question/{question_id}/marked:
+    parameters:
+      - name: question_id
+        in: path
+        required: true
+        type: integer
+    get:
+      responses:
+        '200':
+          description: Success
+      description: >-
+        Returns options marked by current student for question with specified
+        question ID.
+      operationId: get_question_marked_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Questions
+  /question/{question_id}/options:
+    parameters:
+      - name: question_id
+        in: path
+        required: true
+        type: integer
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Returns all the option of the question with specified question ID.
+      operationId: get_question_option_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Options
+    post:
+      responses:
+        '200':
+          description: Success
+      description: Add options to the question with specified question ID.
+      operationId: post_question_option_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/OptionInput'
+      security:
+        - jsonWebToken: []
+      tags:
+        - Options
+  /student/{student_id}:
+    parameters:
+      - name: student_id
+        in: path
+        required: true
+        type: integer
+    delete:
+      responses:
+        '200':
+          description: Success
+      description: Delete  student of specified user ID.
+      operationId: delete_student_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Student
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Return details of student of specified user ID.
+      operationId: get_student_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Student
+    put:
+      responses:
+        '200':
+          description: Success
+      description: Modify details of student of specified user ID.
+      operationId: put_student_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Student'
+      security:
+        - jsonWebToken: []
+      tags:
+        - Student
+  /student/{user_id}/enroll/{course_id}:
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        type: integer
+      - name: course_id
+        in: path
+        required: true
+        type: integer
+    delete:
+      responses:
+        '200':
+          description: Success
+      description: Delete a student of specified user ID from course of specified user ID.
+      operationId: delete_student_enrollment_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Enrollments
+    get:
+      responses:
+        '200':
+          description: Success
+      description: >-
+        Return if a student of specified user ID is enrolled to course of
+        specified course ID.
+      operationId: get_student_enrollment_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Enrollments
+    post:
+      responses:
+        '200':
+          description: Success
+      description: Add a student of specified user ID to course of specified course ID.
+      operationId: post_student_enrollment_api
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          type: integer
+          description: User ID
+        - name: course_id
+          in: query
+          required: true
+          type: integer
+          description: Course ID
+      security:
+        - jsonWebToken: []
+      tags:
+        - Enrollments
+  /students:
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Return details of all student users.
+      operationId: get_students_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Student
+    post:
+      responses:
+        '200':
+          description: Success
+      description: Adds current user as a student.
+      operationId: post_students_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Student
+  /user:
+    delete:
+      responses:
+        '200':
+          description: Success
+      description: Delete the users details.
+      operationId: delete_user_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - User
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Get cureent user details.
+      operationId: get_user_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - User
+    put:
+      responses:
+        '200':
+          description: Success
+      description: Modify the users details.
+      operationId: put_user_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/InputUser'
+      security:
+        - jsonWebToken: []
+      tags:
+        - User
+    post:
+      responses:
+        '200':
+          description: Success
+      description: Add the new users details.
+      operationId: post_user_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/InputUser'
+      security:
+        - jsonWebToken: []
+      tags:
+        - User
+  /user/{user_id}:
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        type: integer
+    delete:
+      responses:
+        '200':
+          description: Success
+      description: Delete the users details with specified user ID.
+      operationId: delete_userget_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - User
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Return the users details with specified user ID.
+      operationId: get_userget_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - User
+    put:
+      responses:
+        '200':
+          description: Success
+      description: Modify the users details with specified user ID.
+      operationId: put_userget_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/InputUser'
+      security:
+        - jsonWebToken: []
+      tags:
+        - User
+  /users:
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Modify all the users details.
+      operationId: get_users_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - User
+  /week/{week_id}:
+    parameters:
+      - name: week_id
+        in: path
+        required: true
+        type: integer
+    delete:
+      responses:
+        '200':
+          description: Success
+      description: Delete the details of the week with specified week ID.
+      operationId: delete_week_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Weeks
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Returns the details of the week with specified week ID.
+      operationId: get_week_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Weeks
+    put:
+      responses:
+        '200':
+          description: Success
+      description: Modify the details of the week with specified week ID.
+      operationId: put_week_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/WeekUpdate'
+      security:
+        - jsonWebToken: []
+      tags:
+        - Weeks
+  /week/{week_id}/assignments:
+    get:
+      responses:
+        '200':
+          description: Success
+      description: >-
+        Returns all the assignments in the week with the specified week ID of
+        current course
+      operationId: get_week_assignment_api
+      parameters:
+        - name: week_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the user
+      security:
+        - jsonWebToken: []
+      tags:
+        - Assignments
+    post:
+      responses:
+        '200':
+          description: Success
+      description: Add assignments to the week with specified week ID of current course
+      operationId: post_week_assignment_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Assignment'
+        - name: week_id
+          in: path
+          required: true
+          type: integer
+      security:
+        - jsonWebToken: []
+      tags:
+        - Assignments
+  /week/{week_id}/lectures:
+    parameters:
+      - name: week_id
+        in: path
+        required: true
+        type: integer
+    get:
+      responses:
+        '200':
+          description: Success
+      description: Returns the lectures present in the week with the specified week ID.
+      operationId: get_week_lecture_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Lectures
+    post:
+      responses:
+        '200':
+          description: Success
+      description: Add lectures to the week with the specified week ID.
+      operationId: post_week_lecture_api
+      parameters:
+        - name: payload
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/Lecture'
+      security:
+        - jsonWebToken: []
+      tags:
+        - Lectures
+  /week/{week_id}/summarize:
+    parameters:
+      - name: week_id
+        in: path
+        required: true
+        type: integer
+    put:
+      responses:
+        '200':
+          description: Success
+      description: |-
+        Modify the summary of the week with specified week ID.
+        Generated by Gemini LLM
+      operationId: put_week_summary_api
+      security:
+        - jsonWebToken: []
+      tags:
+        - Weeks
+info:
+  title: SE Project Team 7
+  version: '1.0'
+  description: >-
+    This document outlines the collection of all the endpoints used in the
+    project
+produces:
+  - application/json
+consumes:
+  - application/json
+securityDefinitions:
+  jsonWebToken:
+    type: apiKey
+    in: header
+    name: Authorization : Bearer
+tags:
+  - name: DB Populate and Testing
+    description: DB Populate and Testing
+  - name: Assignments
+    description: Collection of assignments endpoints
+  - name: Authorization
+    description: Collection of authorization endpoints
+  - name: Chats
+    description: Collection of chat endpoints
+  - name: Course
+    description: Collection of course endpoints
+  - name: Enrollments
+    description: Collection of enrollment endpoints
+  - name: Events
+    description: Collection of event endpoints
+  - name: Instructor
+    description: Collection of instructor endpoints
+  - name: Lectures
+    description: Collection of lecture endpoints
+  - name: Options
+    description: |-
+      Collection of option endpoints.
+      These are the options to the questions in the assignments.
+  - name: Questions
+    description: Collection of question endpoints
+  - name: Student
+    description: Collection of student endpoints
+  - name: User
+    description: Collection of user endpoints
+  - name: Weeks
+    description: Collection of week endpoints
+definitions:
+  Assignment:
+    required:
+      - due_date
+      - is_graded
+      - title
+      - week_id
+    properties:
+      title:
+        type: string
+        description: The title of the assignment
+        example: GA1
+      is_graded:
+        type: boolean
+        description: Is the assignment graded?
+        example: true
+      due_date:
+        type: string
+        format: date-time
+        description: The duedate of the assignment
+        example: '2024-08-1 23:59:59'
+      week_id:
+        type: integer
+        description: The Week ID
+        example: 1
+    type: object
+  login:
+    required:
+      - password
+      - username
+    properties:
+      username:
+        type: string
+        description: The username
+        example: admin
+      password:
+        type: string
+        description: The password
+        example: admin
+    type: object
+  Chat:
+    required:
+      - prompt
+    properties:
+      prompt:
+        type: string
+        description: The prompt
+        example: How do I make lists in python?
+    type: object
+  Course:
+    required:
+      - level
+      - name
+    properties:
+      name:
+        type: string
+        description: Name of the course
+        example: Programming in Python
+      level:
+        type: integer
+        description: Level of the course
+        example: 1
+      summary:
+        type: string
+        description: Summary of the course
+        example: This course is about programming in Python
+    type: object
+  Event:
+    required:
+      - end
+      - start
+      - title
+    properties:
+      title:
+        type: string
+        description: The Title of the Event
+        example: OPPE due
+      start:
+        type: string
+        format: date-time
+        description: The Start date of the event
+        example: '2024-08-01 23:59:59'
+      end:
+        type: string
+        format: date-time
+        description: The end date of the event
+        example: '2024-08-04 23:59:59'
+    type: object
+  Lecture:
+    required:
+      - summary
+      - title
+      - url
+    properties:
+      title:
+        type: string
+        description: The Title of the lecture
+        example: Lists in python
+      url:
+        type: string
+        description: The URL of the lecture
+        example: https://www.youtube.com/watch?v=LDU_Txk06tM
+      summary:
+        type: string
+        description: The Summary of the lecture
+        example: Lists in python
+    type: object
+  OptionInput:
+    required:
+      - is_correct
+      - text
+    properties:
+      text:
+        type: string
+        description: Text of the option
+        example: Abc Abc
+      is_correct:
+        type: boolean
+        description: Boolean, is the current option correct?
+        example: true
+    type: object
+  Question:
+    required:
+      - is_msq
+      - text
+    properties:
+      text:
+        type: string
+        description: The text of the question
+        example: What are examples of lists ih python?
+      is_msq:
+        type: boolean
+        description: Is the question multiple select?
+        example: false
+    type: object
+  Student:
+    required:
+      - cgpa
+    properties:
+      cgpa:
+        type: number
+        description: The Student CGPA
+        example: 9
+    type: object
+  InputUser:
+    required:
+      - name
+      - password
+      - username
+    properties:
+      name:
+        type: string
+        description: Name of the user
+        example: John Doe
+      username:
+        type: string
+        description: Username of the user
+        example: johndoe
+      password:
+        type: string
+        description: Password of the user
+        example: password
+    type: object
+  WeekInput:
+    required:
+      - number
+    properties:
+      number:
+        type: integer
+        description: Number of the week
+        example: 1
+      summary:
+        type: string
+        description: A quick summary
+        example: In this week we do bla bla and bla
+    type: object
+  WeekUpdate:
+    required:
+      - course_id
+      - number
+    properties:
+      number:
+        type: integer
+        description: Number of the week
+        example: 1
+      course_id:
+        type: integer
+        description: ID of the Course
+        example: 1
+      summary:
+        type: string
+        description: A quick summary
+        example: In this week we do bla bla and bla
+    type: object
+responses:
+  ParseError:
+    description: When a mask can't be parsed
+  MaskError:
+    description: When any error occurs on mask
