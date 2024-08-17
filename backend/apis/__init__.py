@@ -56,6 +56,9 @@ from apis.student import api as student_namespace
 from apis.user import api as user_namespace
 from apis.week import api as week_namespace
 
+from apis.richass import api as richass_namespace
+
+
 api.add_namespace(assignment_namespace)
 api.add_namespace(auth_namespace)
 api.add_namespace(chat_namespace)
@@ -69,6 +72,8 @@ api.add_namespace(question_namespace)
 api.add_namespace(student_namespace)
 api.add_namespace(user_namespace)
 api.add_namespace(week_namespace)
+
+api.add_namespace(richass_namespace)
 
 
 @api.route("/debug/db_populate")
