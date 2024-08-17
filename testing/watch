@@ -1,0 +1,13 @@
+#!/bin/bash
+
+files=(*.md)
+
+if [[ -n "$1" && -e "$1" ]]; then
+  files=("$1")
+  file="$1"
+fi
+
+echo "Watching ${files[*]}"
+
+echo "${files[@]}" | tr ' ' '\n' | entr ./compile "$file"
+
