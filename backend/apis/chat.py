@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from apis import api
 from flask_jwt_extended import (
     JWTManager,
@@ -103,13 +101,11 @@ class CourseChatAPI(Resource):
         args = chat_parser.parse_args()
         prompt = args["prompt"]
         response = None
-        datetime = datetime.now()
         # simluated response
         response = "Default response from GENAI"
         chat = Chat(
             prompt=prompt,
             response=response,
-            datetime=datetime,
             user=user,
             course=course,
         )
@@ -171,10 +167,9 @@ class ChatAPI(Resource):
         args = chat_parser.parse_args()
         prompt = args["prompt"]
         response = None
-        datetime = datetime.now()
         # simluated response
         response = "Default response from GENAI"
-        chat = Chat(prompt=prompt, response=response, datetime=datetime, user=user)
+        chat = Chat(prompt=prompt, response=response, user=user)
         db.session.add(chat)
         db.session.commit()
         return marshal(chat, chat_fields)

@@ -58,8 +58,8 @@ lecture_input_fields = api.model(
         ),
         "url": fields.String(
             required=True,
-            description="The URL of the lecture",
-            example="https://www.youtube.com/watch?v=LDU_Txk06tM",
+            description="The Youtube URL ID of the lecture",
+            example="=LDU_Txk06tM",
         ),
         "summary": fields.String(
             required=True,

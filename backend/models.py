@@ -2,6 +2,7 @@ from main import app
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -39,6 +40,21 @@ class User(db.Model):
         cascade="all, delete-orphan"
     )
 
+    student = db.relationship(
+        'Student',
+        backref=db.backref("user", lazy=True),
+        single_parent=True,
+        uselist=False,
+    )
+
+    instructor = db.relationship(
+        "Instructor",
+        backref=db.backref("user", lazy=True),
+        single_parent=True,
+        uselist=False,
+    )
+
+
     @property
     def password(self):
         raise AttributeError("password is not a readable attribute")
@@ -55,17 +71,13 @@ class Student(db.Model):
     id = db.Column(
         db.Integer, db.ForeignKey("user.id"), nullable=False, primary_key=True
     )
-    user = db.relationship(
-        "User",
-        backref=db.backref("student", lazy=True),
-        cascade="all, delete-orphan",
-        single_parent=True
-    )
 
     cgpa = db.Column(db.Float, nullable=False)
 
     courses = db.relationship(
-        "Course", secondary=student_course, backref=db.backref("students", lazy=True),
+        "Course", 
+        secondary=student_course, 
+        backref=db.backref("students", lazy=True),
     )
 
 
@@ -73,14 +85,10 @@ class Instructor(db.Model):
     id = db.Column(
         db.Integer, db.ForeignKey("user.id"), nullable=False, primary_key=True
     )
-    user = db.relationship("User", backref=db.backref("instructor", lazy=True))
-
     courses = db.relationship(
         "Course",
         secondary=instructor_course,
         backref=db.backref("instructors", lazy=True),
-        cascade="all, delete-orphan",
-        single_parent=True
     )
 
 
@@ -206,7 +214,7 @@ class Chat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     prompt = db.Column(db.String(80), nullable=False)
     response = db.Column(db.String(80), nullable=True)
-    datetime = db.Column(db.DateTime, nullable=False)
+    datetime = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 

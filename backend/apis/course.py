@@ -25,7 +25,7 @@ api = Namespace("Course", description="Collection of course endpoints", path="/"
 course_fields = api.model(
     "Course",
     {
-        # "id": fields.Integer,
+        "id": fields.Integer,
         "name": fields.String(
             description="Name of the course",
             example="Programming in Python",
