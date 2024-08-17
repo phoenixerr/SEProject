@@ -48,6 +48,11 @@ class LoginAPI(Resource):
         user = User.query.filter_by(username=username).first()
         if user and user.verify_password(password):
             access_token = create_access_token(identity=user.id)
-            return {"access_token": access_token}
+            return {
+                "access_token": access_token,
+                "admin": bool(user.admin),
+                "instructor": bool(user.instructor),
+                "student": bool(user.student),
+                }
         else:
             return {"message": "Invalid credentials"}, 401

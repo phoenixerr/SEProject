@@ -65,7 +65,7 @@ user_parser.add_argument(
 class UserAPI(Resource):
     @marshal_with(user_fields)
     @jwt_required()
-    @api.doc(description="Get cureent user details.", security="jsonWebToken")
+    @api.doc(description="Get current user details.", security="jsonWebToken")
     def get(self):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
@@ -124,7 +124,7 @@ class UserAPI(Resource):
 @api.route("/users")
 class UsersAPI(Resource):
     @marshal_with(user_fields)
-    @api.doc(description="Modify all the users details.", security="jsonWebToken")
+    @api.doc(description="Get all the users details.", security="jsonWebToken")
     def get(self):
         users = User.query.all()
         return users
