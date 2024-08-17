@@ -27,6 +27,18 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     passhash = db.Column(db.String(80), nullable=False)
 
+    chats = db.relationship(
+        "Chat",
+        backref=db.backref("user", lazy=True),
+        cascade="all, delete-orphan"
+    )
+
+    events = db.relationship(
+        "Event",
+        backref=db.backref("user", lazy=True),
+        cascade="all, delete-orphan"
+    )
+
     @property
     def password(self):
         raise AttributeError("password is not a readable attribute")
@@ -43,12 +55,17 @@ class Student(db.Model):
     id = db.Column(
         db.Integer, db.ForeignKey("user.id"), nullable=False, primary_key=True
     )
-    user = db.relationship("User", backref=db.backref("student", lazy=True))
+    user = db.relationship(
+        "User",
+        backref=db.backref("student", lazy=True),
+        cascade="all, delete-orphan",
+        single_parent=True
+    )
 
     cgpa = db.Column(db.Float, nullable=False)
 
     courses = db.relationship(
-        "Course", secondary=student_course, backref=db.backref("students", lazy=True)
+        "Course", secondary=student_course, backref=db.backref("students", lazy=True),
     )
 
 
@@ -62,6 +79,8 @@ class Instructor(db.Model):
         "Course",
         secondary=instructor_course,
         backref=db.backref("instructors", lazy=True),
+        cascade="all, delete-orphan",
+        single_parent=True
     )
 
 
@@ -69,7 +88,12 @@ class Admin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    user = db.relationship("User", backref=db.backref("admin", lazy=True))
+    user = db.relationship(
+        "User",
+        backref=db.backref("admin", lazy=True),
+        cascade="all, delete-orphan",
+        single_parent=True
+    )
 
 
 class Course(db.Model):
@@ -78,6 +102,24 @@ class Course(db.Model):
     level = db.Column(db.Integer, nullable=False, default=1)
     summary = db.Column(db.String(80), nullable=True)
 
+    weeks = db.relationship(
+        "Week",
+        backref=db.backref("course", lazy=True),
+        cascade="all, delete-orphan",
+    )
+
+    chats = db.relationship(
+        "Chat",
+        backref=db.backref("course", lazy=True),
+        cascade="all, delete-orphan",
+    )
+
+    events = db.relationship(
+        "Event",
+        backref=db.backref("course", lazy=True),
+        cascade="all, delete-orphan",
+    )
+
 
 class Week(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -85,7 +127,18 @@ class Week(db.Model):
     summary = db.Column(db.String(80), nullable=True)
 
     course_id = db.Column(db.Integer, db.ForeignKey("course.id"), nullable=False)
-    course = db.relationship("Course", backref=db.backref("weeks", lazy=True))
+
+    lectures = db.relationship(
+        "Lecture",
+        backref=db.backref("week", lazy=True),
+        cascade="all, delete-orphan",
+    )
+
+    assignments = db.relationship(
+        "Assignment",
+        backref=db.backref("week", lazy=True),
+        cascade="all, delete-orphan",
+    )
 
 
 class Lecture(db.Model):
@@ -95,7 +148,6 @@ class Lecture(db.Model):
     summary = db.Column(db.String(80), nullable=True)
 
     week_id = db.Column(db.Integer, db.ForeignKey("week.id"), nullable=False)
-    week = db.relationship("Week", backref=db.backref("lectures", lazy=True))
 
 
 class Assignment(db.Model):
@@ -105,7 +157,11 @@ class Assignment(db.Model):
     due_date = db.Column(db.DateTime, nullable=False)
 
     week_id = db.Column(db.Integer, db.ForeignKey("week.id"), nullable=False)
-    week = db.relationship("Week", backref=db.backref("assignments", lazy=True))
+    questions = db.relationship(
+        "Question",
+        backref=db.backref("assignment", lazy=True),
+        cascade="all, delete-orphan",
+    )
 
 
 class Question(db.Model):
@@ -116,8 +172,10 @@ class Question(db.Model):
     assignment_id = db.Column(
         db.Integer, db.ForeignKey("assignment.id"), nullable=False
     )
-    assignment = db.relationship(
-        "Assignment", backref=db.backref("questions", lazy=True)
+    options = db.relationship(
+        "Option",
+        backref=db.backref("question", lazy=True),
+        cascade="all, delete-orphan",
     )
 
 
@@ -127,7 +185,12 @@ class Option(db.Model):
     is_correct = db.Column(db.Boolean, nullable=False)
 
     question_id = db.Column(db.Integer, db.ForeignKey("question.id"), nullable=False)
-    question = db.relationship("Question", backref=db.backref("options", lazy=True))
+
+    submissions = db.relationship(
+        "Submission",
+        backref=db.backref("option", lazy=True),
+        cascade="all, delete-orphan",
+    )
 
 
 class Submission(db.Model):
@@ -137,7 +200,6 @@ class Submission(db.Model):
     user = db.relationship("User", backref=db.backref("submissions", lazy=True))
 
     option_id = db.Column(db.Integer, db.ForeignKey("option.id"), nullable=False)
-    option = db.relationship("Option", backref=db.backref("submissions", lazy=True))
 
 
 class Chat(db.Model):
@@ -147,23 +209,19 @@ class Chat(db.Model):
     datetime = db.Column(db.DateTime, nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    user = db.relationship("User", backref=db.backref("chats", lazy=True))
 
     course_id = db.Column(db.Integer, db.ForeignKey("course.id"), nullable=True)
-    course = db.relationship("Course", backref=db.backref("chats", lazy=True))
 
 
 class Event(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(80), nullable=False)
-    start = db.Column(db.DateTime, nullable=False)
-    end = db.Column(db.DateTime, nullable=False)
+   id = db.Column(db.Integer, primary_key=True)
+   title = db.Column(db.String(80), nullable=False)
+   start = db.Column(db.DateTime, nullable=False)
+   end = db.Column(db.DateTime, nullable=False)
 
-    course_id = db.Column(db.Integer, db.ForeignKey("course.id"), nullable=True)
-    course = db.relationship("Course", backref=db.backref("planners", lazy=True))
+   course_id = db.Column(db.Integer, db.ForeignKey("course.id"), nullable=True)
 
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    user = db.relationship("User", backref=db.backref("planners", lazy=True))
+   user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
 
 with app.app_context():
