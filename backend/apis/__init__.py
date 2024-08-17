@@ -228,8 +228,8 @@ class DebugDBPopulateAPI(Resource):
             ),
             ("What is Replit primarily used for?", False, 2),
             ("Which of the following is NOT a core feature of Replit?", False, 2),
-            ("What are examples of lists ih python?", True, 3),
-            ("What are examples of dictionaries ih python?", True, 3),
+            ("What are examples of lists in python?", True, 3),
+            ("What are examples of dictionaries in python?", True, 3),
         ]
         for q_text,msq,assignmentid in questions:
             question_entry=Question(text=q_text,is_msq=msq,assignment_id=assignmentid)
@@ -242,26 +242,31 @@ class DebugDBPopulateAPI(Resource):
             ("Float", False, 1),
             ("String", True, 1),
             ("Boolean", False, 1),
-            ("\/* */", False, 1),
-            ("//", False, 1),
-            ("#", False, 1),
-            ("Triple quotes (''' or \"\"\")", True, 1),
-            ("Creating and sharing static websites", False, 2),
-            ("Developing and running code in various programming languages", True, 2),
-            ("Managing large-scale database systems", False, 2),
-            ("Designing complex graphical user interfaces", False, 2),
-            ("Real-time collaboration", False, 2),
-            ("Built-in terminal", False, 2),
-            ("Code versioning", True, 2),
-            ("Deployment options", False, 2),
-            ('[1, 2, 3, "hello"]', True, 3),
-            ('["abc", "def", "ijk"]', True, 3),
-            ('{"name": "Alice", "age": 30}', False, 3),
-            ("12345", False, 3),
-            ('[1, 2, 3, "hello"]', False, 3),
-            ('["abc", "def", "ijk"]', False, 3),
-            ('{"name": "Alice", "age": 30}', True, 3),
-            ("12345", False, 3),
+
+            ("\/* */", False, 2),
+            ("//", False, 2),
+            ("#", False, 2),
+            ("Triple quotes (''' or \"\"\")", True, 2),
+
+            ("Creating and sharing static websites", False, 3),
+            ("Developing and running code in various programming languages", True, 3),
+            ("Managing large-scale database systems", False, 3),
+            ("Designing complex graphical user interfaces", False, 3),
+
+            ("Real-time collaboration", False, 4),
+            ("Built-in terminal", False, 4),
+            ("Code versioning", True, 4),
+            ("Deployment options", False, 4),
+
+            ('[1, 2, 3, "hello"]', True, 5),
+            ('["abc", "def", "ijk"]', True, 5),
+            ('{"name": "Alice", "age": 30}', False, 5),
+            ("12345", False, 5),
+
+            ('[1, 2, 3, "hello"]', False, 6),
+            ('["abc", "def", "ijk"]', False, 6),
+            ('{"name": "Alice", "age": 30}', True, 6),
+            ("12345", False, 6),
         ]
         for op_text,correct,quesid in options:
             option_entry=Option(text=op_text,is_correct=correct,question_id=quesid)
