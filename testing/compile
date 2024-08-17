@@ -1,0 +1,14 @@
+#!/bin/bash
+
+files=(*.md)
+
+if [[ -n "$1" && -e "$1" ]]; then
+  files=("$1")
+fi
+
+for file in "${files[@]}"; do
+  name=$(basename "$file" .md)
+  echo "Compiling $name"
+  pandoc "$file" --pdf-engine=xelatex -o "$name.pdf"
+  echo Compiled
+done
