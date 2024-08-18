@@ -243,7 +243,7 @@ class DebugDBPopulateAPI(Resource):
             ("String", True, 1),
             ("Boolean", False, 1),
 
-            ("\/* */", False, 2),
+            ("/* */", False, 2),
             ("//", False, 2),
             ("#", False, 2),
             ("Triple quotes (''' or \"\"\")", True, 2),

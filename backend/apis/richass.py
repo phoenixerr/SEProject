@@ -78,6 +78,33 @@ assignment_fields = api.model(
     },
 )
 
+@api.route("/week/<int:week_id>/richassignments")
+class WeekAssignmentAPI(Resource):
+    @jwt_required()
+    @api.doc(
+        description="Returns all the assignments in the week with the specified week ID of current course",
+        params={'week_id':'ID of the user'},
+        security = 'jsonWebToken'
+    )
+    #@api.param('week_id','ID of the user')
+    def get(self, week_id):
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        if not user:
+            return {"message": "User not found"}, 401
+        week = Week.query.get(week_id)
+        if not week:
+            return {"message": "Week not found"}, 401
+        course = week.course
+        if not course:
+            return {"message": "Course not found"}, 401
+        if user.student and course not in user.student.courses:
+            return {"message": "User not enrolled in course"}, 401
+        if user.instructor and course not in user.instructor.courses:
+            return {"message": "User is not an instructor of the course"}, 401
+        assignments = week.assignments
+        return marshal(assignments, assignment_fields)
+
 @api.route("/richassignment/<int:assignment_id>")
 class AssignmentAPI(Resource):
     @jwt_required()

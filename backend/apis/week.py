@@ -92,7 +92,6 @@ week_update_fields = api.model(
 
 week_parser = reqparse.RequestParser()
 week_parser.add_argument("number", type=int, required=True, help="Number of the week")
-week_parser.add_argument("course_id", type=int, required=True, help="Course ID")
 week_parser.add_argument(
     "summary", type=str, required=False, help="Summary of the week"
 )
