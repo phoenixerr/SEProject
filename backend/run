@@ -1,0 +1,32 @@
+#!/bin/bash
+
+VENV=venv
+
+err(){
+  echo "$*"
+  exit 1
+}
+
+if ! [[ -d $VENV ]]; then
+  python -m venv venv || err "Failed to create virtualenv"
+fi
+
+source $VENV/bin/activate || err "Failed to activate virtualenv"
+
+if ! [[ -f requirements.txt ]]; then
+  err "requirements.txt not found"
+fi
+
+pip install -r requirements.txt || err "Failed to install requirements"
+
+if ! [[ -e .env ]]; then
+  if ! [[ -e .env.sample ]]; then
+    err ".env and .env.sample not found"
+  else
+    cp .env.sample .env
+    echo "Copied .env.sample to .env, please make necessary changes"
+    vim .env || err "Failed to open .env"
+  fi
+fi
+
+flask run || err "Failed to start server"
