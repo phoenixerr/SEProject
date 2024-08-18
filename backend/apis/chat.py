@@ -112,7 +112,7 @@ class CourseChatAPI(Resource):
         chat_history = "\n".join(
             [f"{chat['prompt']}\n{chat['response']}" for chat in chat_history]
         )
-        chat_history += f"\nStudent: {args["prompt"]}"
+        chat_history += f"\nStudent: {args['prompt']}"
         print(chat_history)
         response = generate_summary_from_transcript(chat_history, prompt)
         # response = "This is a simulated response"
@@ -187,7 +187,7 @@ class ChatAPI(Resource):
         chat_history = "\n".join(
             [f"{chat['prompt']}\n{chat['response']}" for chat in chat_history]
         )
-        chat_history += f"\nStudent: {args["prompt"]}"
+        chat_history += f"\nStudent: {args['prompt']}"
         # print(chat_history)
         response = generate_summary_from_transcript(chat_history, prompt)
 
