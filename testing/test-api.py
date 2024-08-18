@@ -2,12 +2,7 @@ import requests
 import pytest
 
 BASE_URL = "http://localhost:5000"
-JWT_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcyMzIyMjA2NiwianRpIjoiMmE3ZGY5N2ItMmI3OS00YjkyLTkxMzMtNjU5MmU4M2JmZWVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNzIzMjIyMDY2LCJjc3JmIjoiYjQ5OWY3MjUtOTg5ZC00OWYzLWJiNTUtM2VlZDhjYzZlZjZiIiwiZXhwIjoxNzIzMjI1NjY2fQ.D_wecYwkWHjlf2mmdrcdpHpnKmqfOywpWfxQqZWaWr4"  # Replace with a valid JWT token
-
-headers = {
-    "Authorization": f"Bearer {JWT_TOKEN}",
-    "Content-Type": "application/json"
-}
+JWT_TOKEN = "token"
 
 REPORT_FILE = "test_report.txt"
 
@@ -25,7 +20,7 @@ def log_result(api, inputs, expected_status_code, response, expected_output=None
     """
 
     print(report_entry)  # Print to console (optional)
-   
+
     with open(REPORT_FILE, "a") as file:
         file.write(report_entry)
 
@@ -35,6 +30,20 @@ def clear_report_file():
         file.write("="*50 + "\n")
 
 def make_request(method, api, payload=None, expected_status_code=200, expected_output=None):
+    login_response = requests.post(f"{BASE_URL}/login",
+                                   json={
+                                       'username': 'admin',
+                                       'password': 'admin'
+                                   },
+                                   headers={
+                                       "Content-Type": "application/json"
+                                   }
+                                   )
+    JWT_TOKEN = login_response.json()['access_token']
+    headers = {
+            "Authorization": f"Bearer {JWT_TOKEN}",
+            "Content-Type": "application/json"
+            }
     url = f"{BASE_URL}{api}"
     response = method(url, json=payload, headers=headers)
     log_result(api, payload or {}, expected_status_code, response, expected_output, method.__name__.upper())

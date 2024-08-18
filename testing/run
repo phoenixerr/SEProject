@@ -1,0 +1,24 @@
+#!/bin/bash
+
+VENV=venv
+
+err(){
+  echo "$*"
+  exit 1
+}
+
+if ! [[ -d $VENV ]]; then
+  python -m venv venv || err "Failed to create virtualenv"
+fi
+
+source $VENV/bin/activate || err "Failed to activate virtualenv"
+
+if ! [[ -f requirements.txt ]]; then
+  echo "pytest" > requirements.txt
+  echo "requests" >> requirements.txt
+  echo "requirements.txt does not exist, creating"
+fi
+
+pip install -r requirements.txt || err "Failed to install requirements"
+
+pytest -s test-api.py

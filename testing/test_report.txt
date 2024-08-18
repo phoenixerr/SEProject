@@ -52,20 +52,20 @@ Test Report
     API: [GET] /course/1
     Inputs: {}
     Expected Output: Status Code 200, {'name': 'Programming in Python', 'level': 1, 'summary': None}
-    Actual Output: Status Code 200, {'name': 'Programming in Python', 'level': 1, 'summary': None}
-    Result: Success
+    Actual Output: Status Code 200, {'id': 1, 'name': 'Programming in Python', 'level': 1, 'summary': None}
+    Result: Fail
     
     API: [PUT] /course/1
     Inputs: {'name': 'Programming in Python', 'level': 1, 'summary': 'This course is about programming in Python'}
     Expected Output: Status Code 200, {'name': 'Programming in Python', 'level': 1, 'summary': 'This course is about programming in Python'}
-    Actual Output: Status Code 200, {'name': 'Programming in Python', 'level': 1, 'summary': 'This course is about programming in Python'}
-    Result: Success
+    Actual Output: Status Code 200, {'id': 1, 'name': 'Programming in Python', 'level': 1, 'summary': 'This course is about programming in Python'}
+    Result: Fail
     
     API: [GET] /course/1/chats
     Inputs: {}
     Expected Output: Status Code 200, [{'id': 1, 'prompt': 'How do you swap the values of two variables in Python without using a temporary variable?', 'response': 'Use tuple unpacking: a, b = b, a', 'datetime': '2024-07-28T20:50:59', 'user_id': 2, 'course_id': 1}, {'id': 2, 'prompt': 'What is the difference between a list and a tuple in Python?', 'response': 'Lists are mutable (can be changed), while tuples are immutable (cannot be changed).', 'datetime': '2024-07-28T20:52:59', 'user_id': 2, 'course_id': 1}, {'id': 3, 'prompt': 'How do you check if a string is a palindrome in Python?', 'response': "Reverse the string and compare it to the original string. If they are equal, it's a palindrome.", 'datetime': '2024-07-28T20:51:59', 'user_id': 3, 'course_id': 1}, {'id': 4, 'prompt': 'Explain the use of the enumerate() function in Python.', 'response': 'enumerate() adds a counter to an iterable and returns it as an enumerate object.', 'datetime': '2024-07-28T20:53:59', 'user_id': 3, 'course_id': 1}]
-    Actual Output: Status Code 200, [{'id': 1, 'prompt': 'How do you swap the values of two variables in Python without using a temporary variable?', 'response': 'Use tuple unpacking: a, b = b, a', 'datetime': '2024-07-28T20:50:59', 'user_id': 2, 'course_id': 1}, {'id': 2, 'prompt': 'What is the difference between a list and a tuple in Python?', 'response': 'Lists are mutable (can be changed), while tuples are immutable (cannot be changed).', 'datetime': '2024-07-28T20:52:59', 'user_id': 2, 'course_id': 1}, {'id': 3, 'prompt': 'How do you check if a string is a palindrome in Python?', 'response': "Reverse the string and compare it to the original string. If they are equal, it's a palindrome.", 'datetime': '2024-07-28T20:51:59', 'user_id': 3, 'course_id': 1}, {'id': 4, 'prompt': 'Explain the use of the enumerate() function in Python.', 'response': 'enumerate() adds a counter to an iterable and returns it as an enumerate object.', 'datetime': '2024-07-28T20:53:59', 'user_id': 3, 'course_id': 1}]
-    Result: Success
+    Actual Output: Status Code 200, []
+    Result: Fail
     
     API: [DELETE] /course/1/chats
     Inputs: {}
@@ -106,13 +106,13 @@ Test Report
     API: [GET] /courses
     Inputs: {}
     Expected Output: Status Code 200, [{'name': 'Programming in Python', 'level': 1, 'summary': 'This course is about programming in Python'}, {'name': 'System Commands', 'level': 2, 'summary': None}, {'name': 'Programming, Data Structures and Algorithms', 'level': 2, 'summary': None}, {'name': 'Modern Application Development I', 'level': 2, 'summary': None}]
-    Actual Output: Status Code 200, [{'name': 'Programming in Python', 'level': 1, 'summary': 'This course is about programming in Python'}, {'name': 'System Commands', 'level': 2, 'summary': None}, {'name': 'Programming, Data Structures and Algorithms', 'level': 2, 'summary': None}, {'name': 'Modern Application Development I', 'level': 2, 'summary': None}]
-    Result: Success
+    Actual Output: Status Code 200, [{'id': 1, 'name': 'Programming in Python', 'level': 1, 'summary': 'This course is about programming in Python'}, {'id': 2, 'name': 'System Commands', 'level': 2, 'summary': None}, {'id': 3, 'name': 'Programming, Data Structures and Algorithms', 'level': 2, 'summary': None}, {'id': 4, 'name': 'Modern Application Development I', 'level': 2, 'summary': None}]
+    Result: Fail
     
     API: [POST] /courses
     Inputs: {'name': 'Programming in Python', 'level': 1, 'summary': 'This course is about programming in Python'}
     Expected Output: Status Code 200, {'id': 1, 'name': 'Programming in Python', 'level': 1, 'summary': 'This course is about programming in Python'}
-    Actual Output: Status Code 200, {'name': 'Programming in Python', 'level': 1, 'summary': 'This course is about programming in Python'}
+    Actual Output: Status Code 200, {'id': 5, 'name': 'Programming in Python', 'level': 1, 'summary': 'This course is about programming in Python'}
     Result: Fail
     
     API: [GET] /event/1
@@ -166,8 +166,8 @@ Test Report
     API: [GET] /lecture/1
     Inputs: {}
     Expected Output: Status Code 200, {'id': 1, 'week_id': 1, 'title': 'Introduction to python', 'url': 'https://www.youtube.com/watch?v=8ndsDXohLMQ&list=PLDsnL5pk7-N_9oy2RN4A65Z-PEnvtc7rf', 'summary': "Summary of the lecture 'Intro to python'"}
-    Actual Output: Status Code 200, {'id': 1, 'week_id': 1, 'title': 'Introduction to python', 'url': 'https://www.youtube.com/watch?v=8ndsDXohLMQ&list=PLDsnL5pk7-N_9oy2RN4A65Z-PEnvtc7rf', 'summary': "Summary of the lecture 'Intro to python'"}
-    Result: Success
+    Actual Output: Status Code 200, {'id': 1, 'week_id': 1, 'title': 'Introduction', 'url': '8ndsDXohLMQ', 'summary': "Summary of the lecture 'Introduction'"}
+    Result: Fail
     
     API: [DELETE] /event/1
     Inputs: {}
