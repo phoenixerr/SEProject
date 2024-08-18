@@ -1,0 +1,43 @@
+{
+  "name": "neoseek",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxt/content": "^2.13.2",
+    "@nuxtjs/markdownit": "^2.0.0",
+    "@nuxtjs/mdc": "^0.8.3",
+    "@pinia/nuxt": "^0.5.2",
+    "@primevue/themes": "^4.0.2",
+    "axios": "^1.7.3",
+    "markdown-it": "^14.1.0",
+    "markdown-it-footnote": "^4.0.0",
+    "markdown-it-highlightjs": "^4.1.0",
+    "markdown-it-sub": "^2.0.0",
+    "markdown-it-sup": "^2.0.0",
+    "markdown-it-task-lists": "^2.1.1",
+    "markdown-it-toc-done-right": "^4.2.0",
+    "nuxt": "^3.12.4",
+    "primeflex": "^3.3.1",
+    "primeicons": "^7.0.0",
+    "primevue": "^4.0.2",
+    "rollup": "^4.19.1",
+    "vee-validate": "^4.13.2",
+    "vue": "latest",
+    "vue-beautiful-chat": "^2.5.0",
+    "vue-bot-ui": "^0.2.8"
+  },
+  "devDependencies": {
+    "@nuxt/image": "^1.7.0",
+    "@pinia-plugin-persistedstate/nuxt": "^1.2.1",
+    "@primevue/nuxt-module": "^4.0.2",
+    "markdown-it-abbr": "^2.0.0",
+    "markdown-it-anchor": "^9.0.1"
+  }
+}
