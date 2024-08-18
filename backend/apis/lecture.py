@@ -196,9 +196,14 @@ class LectureAPI(Resource):
         title = args["title"]
         url = args["url"]
         summary = args["summary"]
+        week_id = args["week_id"]
+        new_week = Week.query.get(week_id)
+        if not new_week:
+          return { "message": "Week ID is invalid"}, 401
         lecture.title = title
         lecture.url = url
         lecture.summary = summary
+        lecture.week = new_week
         db.session.commit()
         return marshal(lecture, lecture_fields)
 
