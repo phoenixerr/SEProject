@@ -1,7 +1,11 @@
+import os
 import random
 import string
 
 from apis import api
+
+# for gen ai thingies
+from dotenv import load_dotenv
 from flask_jwt_extended import (
     JWTManager,
     create_access_token,
@@ -17,6 +21,7 @@ from flask_restx import (
     marshal_with,
     reqparse,
 )
+from genaifuncs import generate_summary_from_transcript, get_transcript
 from main import app
 from models import (
     Admin,
@@ -250,9 +255,11 @@ class LectureSummarizeAPI(Resource):
             return {"message": "User is not an admin or instructor"}, 401
         if user.instructor and course not in user.instructor.courses:
             return {"message": "User is not an instructor of the course"}, 401
-        summary = "summary fetched from GENAI" + "".join(
-            random.choices(string.ascii_uppercase + string.digits, k=10)
-        )
+
+        prompt = "You are an educational video summarizer. So accuracy and completeness of information is very important. Ignore any mention of a previous time (such as 2021, 2022) and replace it with the current year. You will be taking the transcript text and summarizing the entire video and providing the important summary in points in about 400 words. Please give a markdown flavoured summary: \n\n\n"
+
+        transcript = get_transcript(lecture.url)
+        summary = generate_summary_from_transcript(transcript, prompt)
         lecture.summary = summary
         db.session.commit()
         return marshal(lecture, lecture_fields)

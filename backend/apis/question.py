@@ -17,6 +17,7 @@ from flask_restx import (
     marshal_with,
     reqparse,
 )
+from genaifuncs import generate_summary_from_transcript, get_transcript
 from main import app
 from models import (
     Admin,
@@ -48,8 +49,14 @@ question_fields = api.model(
 question_input_fields = api.model(
     "Question",
     {
-        "text": fields.String(required=True, description='The text of the question', example='What are examples of lists ih python?'),
-        "is_msq": fields.Boolean(required=True, description='Is the question multiple select?', example=False),
+        "text": fields.String(
+            required=True,
+            description="The text of the question",
+            example="What are examples of lists ih python?",
+        ),
+        "is_msq": fields.Boolean(
+            required=True, description="Is the question multiple select?", example=False
+        ),
     },
 )
 
@@ -254,3 +261,48 @@ class QuestionMarkedAPI(Resource):
             if submission:
                 marked.append(option)
         return marshal(marked, option_fields)
+
+
+@api.route("/question/generate/<int:week_id>")
+class QuestionGenerateAPI(Resource):
+    @jwt_required()
+    @api.doc(
+        description="Generate questions for the week with specified week ID.",
+        security="jsonWebToken",
+    )
+    def get(self, week_id):
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        if not user:
+            return {"message": "User not found"}, 401
+        if not user.admin and not user.instructor:
+            return {"message": "User is not an admin or instructor"}, 401
+        week = Week.query.get(week_id)
+        if not week:
+            return {"message": "Week not found"}, 401
+        course = week.course
+        if not course:
+            return {"message": "Course not found"}, 401
+        if user.instructor and course not in user.instructor.courses:
+            return {"message": "User is not an instructor of the course"}, 401
+
+        # generate questions from genai
+
+        lecture_data = []
+        lectures = week.lectures
+        for lecture in lectures:
+            current_lecture = []
+            current_lecture.append(lecture.title)
+            current_lecture.append("https://youtu.be/" + lecture.url)
+            lecture_data.append(current_lecture)
+
+        lecture_string = ""
+        print(lecture_data)
+        for lecture in lecture_data:
+            lecture_string += f"## {lecture[0]}\n{lecture[1]}\n\n"
+
+        prompt = f"You are an instructor for a course in python. You have been asked to create a quiz for the students. The quiz should contain questions based on the following lecture links. Do the following for each lecture: The questions should be multiple choice questions. The correct answer should be the one that is most relevant to the lecture content. The other options should be incorrect. The questions should be clear and concise. For each lecture, generated 5 or 6 questions and the corresponding options. Make it markdown formatted. The h1 title should be week number, which is {week_id}.\n\n"
+
+        questions = generate_summary_from_transcript(lecture_string, prompt)
+
+        return {"questions_answers": questions}

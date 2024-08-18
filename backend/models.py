@@ -1,8 +1,9 @@
-from main import app
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+from main import app
+from werkzeug.security import check_password_hash, generate_password_hash
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -29,19 +30,15 @@ class User(db.Model):
     passhash = db.Column(db.String(80), nullable=False)
 
     chats = db.relationship(
-        "Chat",
-        backref=db.backref("user", lazy=True),
-        cascade="all, delete-orphan"
+        "Chat", backref=db.backref("user", lazy=True), cascade="all, delete-orphan"
     )
 
     events = db.relationship(
-        "Event",
-        backref=db.backref("user", lazy=True),
-        cascade="all, delete-orphan"
+        "Event", backref=db.backref("user", lazy=True), cascade="all, delete-orphan"
     )
 
     student = db.relationship(
-        'Student',
+        "Student",
         backref=db.backref("user", lazy=True),
         single_parent=True,
         uselist=False,
@@ -53,7 +50,6 @@ class User(db.Model):
         single_parent=True,
         uselist=False,
     )
-
 
     @property
     def password(self):
@@ -75,8 +71,8 @@ class Student(db.Model):
     cgpa = db.Column(db.Float, nullable=False)
 
     courses = db.relationship(
-        "Course", 
-        secondary=student_course, 
+        "Course",
+        secondary=student_course,
         backref=db.backref("students", lazy=True),
     )
 
@@ -100,7 +96,7 @@ class Admin(db.Model):
         "User",
         backref=db.backref("admin", lazy=True),
         cascade="all, delete-orphan",
-        single_parent=True
+        single_parent=True,
     )
 
 
@@ -108,7 +104,7 @@ class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     level = db.Column(db.Integer, nullable=False, default=1)
-    summary = db.Column(db.String(80), nullable=True)
+    summary = db.Column(db.String(8000), nullable=True)
 
     weeks = db.relationship(
         "Week",
@@ -132,7 +128,7 @@ class Course(db.Model):
 class Week(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     number = db.Column(db.Integer, nullable=False)
-    summary = db.Column(db.String(80), nullable=True)
+    summary = db.Column(db.String(8000), nullable=True)
 
     course_id = db.Column(db.Integer, db.ForeignKey("course.id"), nullable=False)
 
@@ -153,7 +149,7 @@ class Lecture(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False)
     url = db.Column(db.String(80), nullable=False)
-    summary = db.Column(db.String(80), nullable=True)
+    summary = db.Column(db.String(8000), nullable=True)
 
     week_id = db.Column(db.Integer, db.ForeignKey("week.id"), nullable=False)
 
@@ -222,14 +218,14 @@ class Chat(db.Model):
 
 
 class Event(db.Model):
-   id = db.Column(db.Integer, primary_key=True)
-   title = db.Column(db.String(80), nullable=False)
-   start = db.Column(db.DateTime, nullable=False)
-   end = db.Column(db.DateTime, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(80), nullable=False)
+    start = db.Column(db.DateTime, nullable=False)
+    end = db.Column(db.DateTime, nullable=False)
 
-   course_id = db.Column(db.Integer, db.ForeignKey("course.id"), nullable=True)
+    course_id = db.Column(db.Integer, db.ForeignKey("course.id"), nullable=True)
 
-   user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
 
 with app.app_context():

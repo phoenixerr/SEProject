@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask_jwt_extended import (
     JWTManager,
     create_access_token,
@@ -8,24 +10,22 @@ from flask_restx import Api, Resource, fields, marshal, marshal_with, reqparse
 from main import app
 from models import (
     Admin,
+    Assignment,
+    Chat,
     Course,
+    Event,
     Instructor,
+    Lecture,
+    Option,
+    Question,
     Student,
+    Submission,
     User,
     Week,
-    Lecture,
-    Assignment,
-    Question,
-    Option,
-    Submission,
-    Chat,
-    Event,
+    db,
     instructor_course,
     student_course,
-    db,
 )
-from datetime import datetime
-
 
 bearer_authorizations = {
     "jsonWebToken": {"type": "apiKey", "in": "header", "name": "Authorization"}
@@ -132,15 +132,15 @@ class DebugDBPopulateAPI(Resource):
         # add instructors to teach courses
         instructor_course_entries = [(9, 1), (10, 1)]
         for instructorid, courseid in instructor_course_entries:
-            instructor=Instructor.query.get(instructorid)
-            course=Course.query.get(courseid)
+            instructor = Instructor.query.get(instructorid)
+            course = Course.query.get(courseid)
             instructor.courses.append(course)
 
         # add students to teach courses
         student_course_entries = [(2, 1), (3, 1), (4, 1), (5, 1)]
         for studentid, courseid in student_course_entries:
-            student=Student.query.get(studentid)
-            course=Course.query.get(courseid)
+            student = Student.query.get(studentid)
+            course = Course.query.get(courseid)
             student.courses.append(course)
 
         # add weeks
@@ -158,60 +158,64 @@ class DebugDBPopulateAPI(Resource):
         # add lectures
         lectures = [
             (
-                "Introduction to python",
+                "Introduction",
                 "8ndsDXohLMQ",
-                "Summary of the lecture 'Intro to python'",
-                1,
-            ),
-            (
-                "How to install python",
-                "8ndsDXohLMQ",
-                "Summary of the lecture 'How to install python'",
-                1,
-            ),
-            (
-                "First programs",
-                "8ndsDXohLMQ",
-                "Summary of the lecture 'First programs'",
+                "Summary of the lecture 'Introduction'",
                 1,
             ),
             (
                 "Introduction to Replit",
-                "8ndsDXohLMQ",
-                "Summary of the lecture 'Intro to Replit'",
+                "NgZZ0HIUqbs",
+                "Summary of the lecture 'Introduction to Replit'",
+                1,
+            ),
+            (
+                "A Quick Introduction to Variables",
+                "Yg6xzi2ie5s",
+                "Summary of the lecture 'A Quick Introduction to Variables'",
+                1,
+            ),
+            (
+                "Variables and Literals",
+                "tDaXdoKfX0k",
+                "Summary of the lecture 'Variables and Literals'",
                 2,
             ),
             (
-                "Using Replit",
-                "8ndsDXohLMQ",
-                "Summary of the lecture 'Using Replit'",
+                "Data Types 1",
+                "8n4MBjuDBu4",
+                "Summary of the lecture 'Data Types 1'",
                 2,
             ),
             (
-                "Introduction to Dictioanries",
-                "8ndsDXohLMQ",
-                "Summary of the lecture 'Intro to Dictionaries'",
+                "Data Types 2",
+                "xQXxufhEJHw",
+                "Summary of the lecture 'Data Types 2'",
                 3,
             ),
             (
-                "Introduction to Lists",
-                "8ndsDXohLMQ",
-                "Summary of the lecture 'Intro to Lists'",
+                "Introduction to while loop",
+                "KTvVNN7ia8o",
+                "Summary of the lecture 'Introduction to while loop'",
                 3,
             ),
         ]
-        for title,url,summary,weekid in lectures:
-            lecture_entry=Lecture(title=title,url=url,summary=summary,week_id=weekid)
+        for title, url, summary, weekid in lectures:
+            lecture_entry = Lecture(
+                title=title, url=url, summary=summary, week_id=weekid
+            )
             db.session.add(lecture_entry)
 
         # add assignments
         assignments = [
-            ("GA1", True, datetime(2024,8,1,23,59,59), 1),
-            ("GA2", True, datetime(2024,8,8,23,59,59), 2),
-            ("GA3", True, datetime(2024,8,15,23,59,59), 3),
+            ("GA1", True, datetime(2024, 8, 1, 23, 59, 59), 1),
+            ("GA2", True, datetime(2024, 8, 8, 23, 59, 59), 2),
+            ("GA3", True, datetime(2024, 8, 15, 23, 59, 59), 3),
         ]
-        for title,graded,duedate,weekid in assignments:
-            assignment_entry=Assignment(title=title,is_graded=graded,due_date=duedate,week_id=weekid)
+        for title, graded, duedate, weekid in assignments:
+            assignment_entry = Assignment(
+                title=title, is_graded=graded, due_date=duedate, week_id=weekid
+            )
             db.session.add(assignment_entry)
 
         # add questions
@@ -231,10 +235,11 @@ class DebugDBPopulateAPI(Resource):
             ("What are examples of lists in python?", True, 3),
             ("What are examples of dictionaries in python?", True, 3),
         ]
-        for q_text,msq,assignmentid in questions:
-            question_entry=Question(text=q_text,is_msq=msq,assignment_id=assignmentid)
+        for q_text, msq, assignmentid in questions:
+            question_entry = Question(
+                text=q_text, is_msq=msq, assignment_id=assignmentid
+            )
             db.session.add(question_entry)
-
 
         # add options to questions
         options = [
@@ -268,25 +273,55 @@ class DebugDBPopulateAPI(Resource):
             ('{"name": "Alice", "age": 30}', True, 6),
             ("12345", False, 6),
         ]
-        for op_text,correct,quesid in options:
-            option_entry=Option(text=op_text,is_correct=correct,question_id=quesid)
+        for op_text, correct, quesid in options:
+            option_entry = Option(text=op_text, is_correct=correct, question_id=quesid)
             db.session.add(option_entry)
 
         # add submissions
         submissions = [(2, 3), (2, 8), (2, 17), (2, 18)]
-        for userid,optionid in submissions:
-            submission_entry=Submission(user_id=userid,option_id=optionid)
+        for userid, optionid in submissions:
+            submission_entry = Submission(user_id=userid, option_id=optionid)
             db.session.add(submission_entry)
 
         # add events
         events = [
-            ("OPPE Due", datetime(2024,8,1,23,59,59), datetime(2024,8,8,23,59,59), 1, 2),
-            ("Hall Ticket issued", datetime(2024,8,1,23,59,59), datetime(2024,8,8,23,59,59), 1, 2),
-            ("Hall Ticket issued", datetime(2024,8,1,23,59,59), datetime(2024,8,8,23,59,59), 1, 3),
-            ("OPPE Due", datetime(2024,8,1,23,59,59), datetime(2024,8,8,23,59,59), 1, 3),
+            (
+                "OPPE Due",
+                datetime(2024, 8, 1, 23, 59, 59),
+                datetime(2024, 8, 8, 23, 59, 59),
+                1,
+                2,
+            ),
+            (
+                "Hall Ticket issued",
+                datetime(2024, 8, 1, 23, 59, 59),
+                datetime(2024, 8, 8, 23, 59, 59),
+                1,
+                2,
+            ),
+            (
+                "Hall Ticket issued",
+                datetime(2024, 8, 1, 23, 59, 59),
+                datetime(2024, 8, 8, 23, 59, 59),
+                1,
+                3,
+            ),
+            (
+                "OPPE Due",
+                datetime(2024, 8, 1, 23, 59, 59),
+                datetime(2024, 8, 8, 23, 59, 59),
+                1,
+                3,
+            ),
         ]
-        for event_title,startdate,enddate,courseid,userid in events:
-            event_entry=Event(title=event_title,start=startdate,end=enddate,course_id=courseid,user_id=userid)
+        for event_title, startdate, enddate, courseid, userid in events:
+            event_entry = Event(
+                title=event_title,
+                start=startdate,
+                end=enddate,
+                course_id=courseid,
+                user_id=userid,
+            )
             db.session.add(event_entry)
 
         # add chats
@@ -294,34 +329,40 @@ class DebugDBPopulateAPI(Resource):
             (
                 "How do you swap the values of two variables in Python without using a temporary variable?",
                 "Use tuple unpacking: a, b = b, a",
-                datetime(2024,7,28,20,50,59),
+                datetime(2024, 7, 28, 20, 50, 59),
                 2,
                 1,
             ),
             (
                 "What is the difference between a list and a tuple in Python?",
                 "Lists are mutable (can be changed), while tuples are immutable (cannot be changed).",
-                datetime(2024,7,28,20,52,59),
+                datetime(2024, 7, 28, 20, 52, 59),
                 2,
                 1,
             ),
             (
                 "How do you check if a string is a palindrome in Python?",
                 "Reverse the string and compare it to the original string. If they are equal, it's a palindrome.",
-                datetime(2024,7,28,20,51,59),
+                datetime(2024, 7, 28, 20, 51, 59),
                 3,
                 1,
             ),
             (
                 "Explain the use of the enumerate() function in Python.",
                 "enumerate() adds a counter to an iterable and returns it as an enumerate object.",
-                datetime(2024,7,28,20,53,59),
+                datetime(2024, 7, 28, 20, 53, 59),
                 3,
                 1,
             ),
         ]
-        for chat_prompt,resp,time,userid,courseid in chats:
-            chat_entry=Chat(prompt=chat_prompt,response=resp,datetime=time,user_id=userid,course_id=courseid)
+        for chat_prompt, resp, time, userid, courseid in chats:
+            chat_entry = Chat(
+                prompt=chat_prompt,
+                response=resp,
+                datetime=time,
+                user_id=userid,
+                course_id=courseid,
+            )
             db.session.add(chat_entry)
 
         db.session.commit()

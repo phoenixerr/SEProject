@@ -17,6 +17,9 @@ from flask_restx import (
     marshal_with,
     reqparse,
 )
+from genaifuncs import generate_summary_from_transcript
+
+# from lecture import WeekLectureAPI
 from main import app
 from models import (
     Admin,
@@ -272,6 +275,23 @@ class WeekSummaryAPI(Resource):
         summary = "summary fetched from GENAI" + "".join(
             random.choices(string.ascii_uppercase + string.digits, k=10)
         )
+
+        # compiling all the lectures of the week into a single string
+        lecture_data = []
+        lectures = week.lectures
+        for lecture in lectures:
+            current_lecture = []
+            current_lecture.append(lecture.title)
+            current_lecture.append("https://youtu.be/" + lecture.url)
+            lecture_data.append(current_lecture)
+
+        lecture_string = ""
+        for lecture in lecture_data:
+            lecture_string += f"## {lecture[0]}\n{lecture[1]}\n\n"
+
+        prompt = "You are a lecture summarization bot. Given a list of youtube links, you will go through all the links a generate a summary for each video. Make the output markdown formatted, and include the title of the video at the top of the summary with a h2 tag. The input will be a json formatted with week id, this will be the title of the output with a h1 tag. The entire summary should be 600 words or more."
+        summary = generate_summary_from_transcript(lecture_string, prompt)
+
         week.summary = summary
         db.session.commit()
         return marshal(week, week_fields)
