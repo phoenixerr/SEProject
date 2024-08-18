@@ -26,8 +26,8 @@ The new and improved version of Seek Portal that integrates GenAI features.
   - Flask CORS
   - Flask RestX
   - Flask JWT Extended
-  - Google Generative AI
-  - Werkzeug
+- Google Generative AI
+- Werkzeug
 
 ### Testing
 
